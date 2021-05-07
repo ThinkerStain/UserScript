@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Light4
 // @namespace    http://tampermonkey.net/
-// @version      0.085
+// @version      0.086
 // @description  Упрощаем работу глазам
 // @author       Yuriy.Klimovich@south.rt.ru
 // @include        *argus.south.rt.ru/argus/views/supportservice/incident/*
@@ -32,6 +32,18 @@
                     newElem0.style = 'padding: 0px 3px;'
                     newElem0.target = "_blank";
                     e0.after(newElem0);
+                }
+            }
+			let e3 = document.getElementById('filt_form').parentNode.parentNode.parentNode.rows;
+            for (let i = 1; i < e3.length; i++) {
+                let dop = e3[i].cells[2].innerHTML;
+                e3[i].cells[2].innerHTML = e3[i].cells[1].innerHTML;
+                e3[i].cells[1].innerHTML = dop;
+                e3[i].cells[2].setAttribute("width", "70%");
+                if (e3[i].cells[1].innerHTML.match(/deleted/gi)) {
+                    e3[i].cells[2].style.background = 'rgb(245 193 192)';
+                    e3[i].cells[1].style.background = 'rgb(245 193 192)';
+                    e3[i].cells[0].style.background = 'rgb(245 193 192)';
                 }
             }
         }
@@ -65,18 +77,7 @@
 
                 }
             }
-            let e3 = document.getElementById('filt_form').parentNode.parentNode.parentNode.rows;
-            for (let i = 1; i < e3.length; i++) {
-                let dop = e3[i].cells[2].innerHTML;
-                e3[i].cells[2].innerHTML = e3[i].cells[1].innerHTML;
-                e3[i].cells[1].innerHTML = dop;
-                e3[i].cells[2].setAttribute("width", "70%");
-                if (e3[i].cells[1].innerHTML.match(/deleted/gi)) {
-                    e3[i].cells[2].style.background = 'rgb(245 193 192)';
-                    e3[i].cells[1].style.background = 'rgb(245 193 192)';
-                    e3[i].cells[0].style.background = 'rgb(245 193 192)';
-                }
-            }
+
         }
     }
 
