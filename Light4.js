@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Светочь
 // @namespace    http://tampermonkey.net/
-// @version      0.06
+// @version      0.08
 // @description  Упрощаем работу глазам
 // @author       Yuriy.Klimovich@south.rt.ru
 // @include        *argus.south.rt.ru/argus/views/supportservice/incident/*
