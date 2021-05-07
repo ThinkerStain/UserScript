@@ -78,7 +78,7 @@
     }
 
     if (document.location.href.match(/.*argus.south.rt.ru\/.*/gi)) {
-alert('23');
+
         let mmu = document.getElementById('main_menu_unit');
         let fdu = mmu.querySelector('form > div > ul');
         newElem = document.createElement('li');
@@ -96,6 +96,14 @@ alert('23');
         document.getElementById('pp1').append(newElem2);
 
         newElem2 = document.createElement('a');
+        newElem2.className = 'ui-menuitem-link ui-submenu-link ui-corner-all';
+        newElem2.setAttribute("href", "http://ctpdiag.south.rt.ru/");
+        newElem2.setAttribute("target", "_blank");
+        newElem2.text = '2L';
+        newElem2.title= '2LTP'; 
+        document.getElementById('pp1').append(newElem2);
+        
+         newElem2 = document.createElement('a');
         newElem2.className = 'ui-menuitem-link ui-submenu-link ui-corner-all';
         newElem2.setAttribute("href", "http://ctpdiag.south.rt.ru/");
         newElem2.setAttribute("target", "_blank");
@@ -175,7 +183,7 @@ alert('23');
         document.getElementById('history_tabs-history_form-new_comment').parentNode.before(newElem2);
 
         let fPersNum = "467181"; //Поиск своих комментов
-        let fTV = ['^00:1a:79', '^ec:4c:4d', '^0c:56:5c', '^1c:bb:a8', '^00:02:9b', '^f4:0e:83', '^00:07:67', '^d8:af:81', '^e4:27', '^bc:64', '^5c:b0', '^7c:6d', '^14:2e', '^60:ce'];
+        let fTV = ['^f8:a0:97', '^00:1a:79', '^ec:4c:4d', '^0c:56:5c', '^1c:bb:a8', '^00:02:9b', '^f4:0e:83', '^00:07:67', '^d8:af:81', '^e4:27', '^bc:64', '^5c:b0', '^7c:6d', '^14:2e', '^60:ce'];
         let fTime = /((&nbsp;)|\s)([0-1]*\d|2[0-3]):[0-5]\d((&nbsp;)|(\s|\b))*/g;
         let fData = /((&nbsp;)|\s)*([0-2]*\d|3[0-1])[\.\-](0\d|1[0-2])[\.\-](202\d|2\d)((&nbsp;)|\s)*/g;
         let fIp = /((2(5[0-5]|[0-4]\d)|1*\d{2}|\d)\.){3}(2(5[0-5]|[0-4]\d)|1*\d{2}|\d)\b/g; // Правило сверки IP
