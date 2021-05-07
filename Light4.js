@@ -192,14 +192,13 @@
         let matches = document.getElementById('history_tabs-history_form-history_table_data').querySelectorAll("tr");
         for (let i = 0; i < matches.length; i++) {
             let nCell = matches[i].cells[3].firstChild;
+			if (matches[i].cells[0].innerText.match(/выезд/gi)){matches[i].style.background = 'rgb(245 193 192)';}
             if (matches[i].cells[2].innerText == 'Добавлен комментарий') { //для поиска "информативных комментариев
                 var io = matches[i].cells[3].innerText.replace(/[^\n]*/gi, "").length;
                 var strStat0 = matches[i].cells[3].innerText.replace(fTags, "");
                 var strStat1 = strStat0.replace(/[^а-я^ё]|\d{1,7}/gi, "").length; //оставляем только кирилицу и номера (кт и т.д)
                 var strStat2 = strStat0.replace(/[а-яё\s]|\d{1,7}/gi, "").length;
-                if (io < 2 && (strStat1 > strStat2)) {
-                    matches[i].style.background = "#FFFF99";
-                }
+                if (io < 2 && (strStat1 > strStat2)) {matches[i].style.background = "#FFFF99";}
             }
             nCell.innerHTML = nCell.innerHTML.replace(/[\/\-]ethernet/gi, " Ethernet"); // нужно ждя того, что бы нt искалхостнеймы "бла-блабла-хостнейм-ethernet"
             nCell.innerHTML = nCell.innerHTML.replace(fIp, "<b style='color:#1100FF;	font-size:12pt' >$&</b>");
