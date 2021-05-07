@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Light4
 // @namespace    http://tampermonkey.net/
-// @version      0.0851
+// @version      0.085
 // @description  Упрощаем работу глазам
 // @author       Yuriy.Klimovich@south.rt.ru
 // @include        *argus.south.rt.ru/argus/views/supportservice/incident/*
@@ -51,7 +51,9 @@
 					//matches[i].style.background
                 }
 				   if (e3[i].cells[1].innerHTML.match(/paused by system/gi)) {
-                    e3[i].style.background = 'rgb(255 255 153)';
+                    e3[i].cells[2].style.background = 'rgb(255 255 153)';
+                    e3[i].cells[1].style.background = 'rgb(255 255 153)';
+                    e3[i].cells[0].style.background = 'rgb(255 255 153)';
 					//matches[i].style.background
                 }
 				
