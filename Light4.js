@@ -81,7 +81,7 @@
     }
 
     if (document.location.href.match(/.*argus.south.rt.ru\/.*/gi)) {
-
+alert('Hello');
         let mmu = document.getElementById('main_menu_unit');
         let fdu = mmu.querySelector('form > div > ul');
         newElem = document.createElement('li');
