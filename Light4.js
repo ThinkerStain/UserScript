@@ -91,57 +91,64 @@
         newElem2.className = 'ui-menuitem-link ui-submenu-link ui-corner-all';
         newElem2.setAttribute("href", "https://mrf-pl.south.rt.ru/");
         newElem2.setAttribute("target", "_blank");
-        newElem2.innerHTML = '<img src="https://mrf-pl.south.rt.ru/images/logo.ico">';
+        newElem2.innerHTML = 'In';//'<img src="https://mrf-pl.south.rt.ru/images/logo.ico">';
+        newElem2.title= 'Initi'; 
         document.getElementById('pp1').append(newElem2);
 
         newElem2 = document.createElement('a');
         newElem2.className = 'ui-menuitem-link ui-submenu-link ui-corner-all';
         newElem2.setAttribute("href", "http://ctpdiag.south.rt.ru/");
         newElem2.setAttribute("target", "_blank");
-        newElem2.text = '2LTP';
+        newElem2.text = '2L';
+        newElem2.title= '2LTP'; 
         document.getElementById('pp1').append(newElem2);
 
         newElem2 = document.createElement('a');
         newElem2.className = 'ui-menuitem-link ui-submenu-link ui-corner-all';
         newElem2.setAttribute("href", "http://tr069.south.rt.ru/#/search");
         newElem2.setAttribute("target", "_blank");
-        newElem2.innerHTML = '<img src="https://images.squarespace-cdn.com/content/v1/5ece2ac40514bb77afb1018d/1597917767982-QHP29Q8LN6AR6CKO3XOX/ke17ZwdGBToddI8pDm48kFQQgP34qnCpeHaeAOzTt7pZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZamWLI2zvYWH8K3-s_4yszcp2ryTI0HqTOaaUohrI8PIedjZT6_OBzi2ofH1EqNdNeCRxNMlbxs9807lIebBlcA/favicon.ico?format=100w" height="16" width="16">';
+        newElem2.innerHTML = 'TR';//'<img src="https://images.squarespace-cdn.com/content/v1/5ece2ac40514bb77afb1018d/1597917767982-QHP29Q8LN6AR6CKO3XOX/ke17ZwdGBToddI8pDm48kFQQgP34qnCpeHaeAOzTt7pZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZamWLI2zvYWH8K3-s_4yszcp2ryTI0HqTOaaUohrI8PIedjZT6_OBzi2ofH1EqNdNeCRxNMlbxs9807lIebBlcA/favicon.ico?format=100w" height="16" width="16">';
+        newElem2.title= '2LTP'; 
         document.getElementById('pp1').append(newElem2);
 
         newElem2 = document.createElement('a');
         newElem2.className = 'ui-menuitem-link ui-submenu-link ui-corner-all';
         newElem2.setAttribute("href", "https://onymaweb.south.rt.ru/onyma/main/dogsearch.htms?menuitem=1851&_cc=1&__rpp=0&pg=0");
         newElem2.setAttribute("target", "_blank");
-        newElem2.innerHTML = '<img src="https://onymaweb.south.rt.ru/favicon.ico" height="16" width="16">';
+        newElem2.innerHTML = 'On';//'<img src="https://onymaweb.south.rt.ru/favicon.ico" height="16" width="16">';
+        newElem2.title= 'Onyma'; 
         document.getElementById('pp1').append(newElem2);
 
         newElem2 = document.createElement('a');
         newElem2.className = 'ui-menuitem-link ui-submenu-link ui-corner-all';
         newElem2.setAttribute("href", "https://uniapp.south.rt.ru/");
         newElem2.setAttribute("target", "_blank");
-        newElem2.innerHTML = '<img src="https://moscow.old.rt.ru/img/smart-banner/icon.png" height="16" width="16">';
-        // newElem2.text = 'UNIAPP';
+        newElem2.innerHTML = 'Un';//'<img src="https://moscow.old.rt.ru/img/smart-banner/icon.png" height="16" width="16">';
+        newElem2.title= 'UNIAPP';
         document.getElementById('pp1').append(newElem2);
 
         newElem2 = document.createElement('a');
         newElem2.className = 'ui-menuitem-link ui-submenu-link ui-corner-all';
         newElem2.setAttribute("href", "http://10.144.35.30:8081/smarttube/master/adminui4/app/login");
         newElem2.setAttribute("target", "_blank");
-        newElem2.innerHTML = '<img src="https://www.nginx.com/wp-content/uploads/2019/10/favicon-48x48.ico" height="16" width="16">'
+        newElem2.innerHTML = 'St';//'<img src="https://www.nginx.com/wp-content/uploads/2019/10/favicon-48x48.ico" height="16" width="16">'
+        newElem2.title= 'ТВ-платформа'; 
         document.getElementById('pp1').append(newElem2);
 
         newElem2 = document.createElement('a');
         newElem2.className = 'ui-menuitem-link ui-submenu-link ui-corner-all';
         newElem2.setAttribute("href", "http://10.63.1.2:4000/rawlog");
         newElem2.setAttribute("target", "_blank");
-        newElem2.text = 'RAWLOG';
+        newElem2.text = 'Ra';
+        newElem2.title= 'Rawlog'; 
         document.getElementById('pp1').append(newElem2);
 
         newElem2 = document.createElement('a');
         newElem2.className = 'ui-menuitem-link ui-submenu-link ui-corner-all';
         newElem2.setAttribute("href", "https://onymaweb.south.rt.ru/onyma/main/ap_mon.htms?menuitem=1921&real_mi=1921&_cc=1&__rpp=0");
         newElem2.setAttribute("target", "_blank");
-        newElem2.text = 'A-ONYMA';
+        newElem2.text = 'Ao';
+        newElem2.title= 'Авторизации'; 
         document.getElementById('pp1').append(newElem2);
     }
 
