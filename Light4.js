@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Светочь
+// @name         Light4
 // @namespace    http://tampermonkey.net/
 // @version      0.08
 // @description  Упрощаем работу глазам
