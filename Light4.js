@@ -103,14 +103,6 @@
         newElem2.title= '2LTP'; 
         document.getElementById('pp1').append(newElem2);
         
-         newElem2 = document.createElement('a');
-        newElem2.className = 'ui-menuitem-link ui-submenu-link ui-corner-all';
-        newElem2.setAttribute("href", "http://ctpdiag.south.rt.ru/");
-        newElem2.setAttribute("target", "_blank");
-        newElem2.text = '2L';
-        newElem2.title= '2LTP'; 
-        document.getElementById('pp1').append(newElem2);
-
         newElem2 = document.createElement('a');
         newElem2.className = 'ui-menuitem-link ui-submenu-link ui-corner-all';
         newElem2.setAttribute("href", "http://tr069.south.rt.ru/#/search");
