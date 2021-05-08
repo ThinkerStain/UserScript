@@ -43,14 +43,14 @@
                 e3[i].cells[2].setAttribute("width", "70%");
                 if (e3[i].innerText.match(/deleted/gi)) {
                     e3[i].cells[0].style.background = 'rgb(245 193 192)';
-                    e3[i].cells[0].style.background = 'rgb(245 193 192)';
-                    e3[i].cells[0].style.background = 'rgb(245 193 192)';
+                    e3[i].cells[1].style.background = 'rgb(245 193 192)';
+                    e3[i].cells[2].style.background = 'rgb(245 193 192)';
 
                 }
                 if (e3[i].innerText.match(/paused by system/gi)) {
                     e3[i].cells[0].style.background = 'rgb(255 255 153)';
-                    e3[i].cells[0].style.background = 'rgb(245 193 192)';
-                    e3[i].cells[0].style.background = 'rgb(245 193 192)';
+                    e3[i].cells[1].style.background = 'rgb(245 193 192)';
+                    e3[i].cells[2].style.background = 'rgb(245 193 192)';
                 }
                 if (e3[i].innerText.match(/active/gi)) {
                     e3[i].cells[0].style.background = 'rgb(193 245 192)';
