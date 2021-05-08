@@ -1,15 +1,14 @@
 // ==UserScript==
 // @name         Light4
 // @namespace    http://tampermonkey.net/
-// @version      0.0852
+// @version      0.086
 // @description  Упрощаем работу глазам
 // @author       Yuriy.Klimovich@south.rt.ru
 // @include        *argus.south.rt.ru/argus/views/supportservice/incident/*
 // @include        *argus.south.rt.ru/argus*
 // @include        *onyma/main/clsrv.htms*
 // @include        *onyma/main/dog.htms?*
-// @require      https://github.com/ThinkerStain/UserScript/raw/main/Light4.js
-// @updateURL   https://github.com/ThinkerStain/UserScript/raw/main/Light4.js
+
 
 
 // @unsafeWindow
@@ -34,33 +33,30 @@
                     e0.after(newElem0);
                 }
             }
-			
-				
-				
-				
-			let e3 = document.getElementById('filt_form').parentNode.parentNode.parentNode.rows;
+
+            let e3 = document.getElementById('filt_form').parentNode.parentNode.parentNode.rows;
             for (let i = 1; i < e3.length; i++) {
                 let dop = e3[i].cells[2].innerHTML;
                 e3[i].cells[2].innerHTML = e3[i].cells[1].innerHTML;
                 e3[i].cells[1].innerHTML = dop;
                 e3[i].cells[2].setAttribute("width", "70%");
-                if (e3[i].cells[1].innerHTML.match(/deleted/gi)) {
-                    e3[i].cells[2].style.background = 'rgb(245 193 192)';
-                    e3[i].cells[1].style.background = 'rgb(245 193 192)';
+                if (e3[i].innerText.match(/deleted/gi)) {
                     e3[i].cells[0].style.background = 'rgb(245 193 192)';
-					//matches[i].style.background
+                    e3[i].cells[0].style.background = 'rgb(245 193 192)';
+                    e3[i].cells[0].style.background = 'rgb(245 193 192)';
+
                 }
-				   if (e3[i].cells[1].innerHTML.match(/paused by system/gi)) {
-                    e3[i].cells[2].style.background = 'rgb(255 255 153)';
-                    e3[i].cells[1].style.background = 'rgb(255 255 153)';
+                if (e3[i].innerText.match(/paused by system/gi)) {
                     e3[i].cells[0].style.background = 'rgb(255 255 153)';
+                    e3[i].cells[0].style.background = 'rgb(245 193 192)';
+                    e3[i].cells[0].style.background = 'rgb(245 193 192)';
                 }
-					if (e3[i].cells[1].innerHTML.match(/active/gi)) {
-                    e3[i].cells[2].style.background = 'rgb(193 245 192)';
-                    e3[i].cells[1].style.background = 'rgb(193 245 192)';
+                if (e3[i].innerText.match(/active/gi)) {
                     e3[i].cells[0].style.background = 'rgb(193 245 192)';
+                    e3[i].cells[1].style.background = 'rgb(193 245 192)';
+                    e3[i].cells[2].style.background = 'rgb(193 245 192)';
                 }
-				
+
             }
         }
 
@@ -98,7 +94,7 @@
     }
 
     if (document.location.href.match(/.*argus.south.rt.ru\/.*/gi)) {
-//alert('11');
+        //alert('11');
         let mmu = document.getElementById('main_menu_unit');
         let fdu = mmu.querySelector('form > div > ul');
         newElem = document.createElement('li');
@@ -111,8 +107,8 @@
         newElem2.className = 'ui-menuitem-link ui-submenu-link ui-corner-all';
         newElem2.setAttribute("href", "https://mrf-pl.south.rt.ru/");
         newElem2.setAttribute("target", "_blank");
-        newElem2.innerHTML = 'In';//'<img src="https://mrf-pl.south.rt.ru/images/logo.ico">';
-        newElem2.title= 'Initi'; 
+        newElem2.innerHTML = 'In';
+        newElem2.title = 'Initi';
         document.getElementById('pp1').append(newElem2);
 
         newElem2 = document.createElement('a');
@@ -120,39 +116,39 @@
         newElem2.setAttribute("href", "http://ctpdiag.south.rt.ru/");
         newElem2.setAttribute("target", "_blank");
         newElem2.text = '2L';
-        newElem2.title= '2LTP'; 
+        newElem2.title = '2LTP';
         document.getElementById('pp1').append(newElem2);
-        
+
         newElem2 = document.createElement('a');
         newElem2.className = 'ui-menuitem-link ui-submenu-link ui-corner-all';
         newElem2.setAttribute("href", "http://tr069.south.rt.ru/#/search");
         newElem2.setAttribute("target", "_blank");
-        newElem2.innerHTML = 'TR';//'<img src="https://images.squarespace-cdn.com/content/v1/5ece2ac40514bb77afb1018d/1597917767982-QHP29Q8LN6AR6CKO3XOX/ke17ZwdGBToddI8pDm48kFQQgP34qnCpeHaeAOzTt7pZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZamWLI2zvYWH8K3-s_4yszcp2ryTI0HqTOaaUohrI8PIedjZT6_OBzi2ofH1EqNdNeCRxNMlbxs9807lIebBlcA/favicon.ico?format=100w" height="16" width="16">';
-        newElem2.title= '2LTP'; 
+        newElem2.innerHTML = 'TR';
+        newElem2.title = '2LTP';
         document.getElementById('pp1').append(newElem2);
 
         newElem2 = document.createElement('a');
         newElem2.className = 'ui-menuitem-link ui-submenu-link ui-corner-all';
         newElem2.setAttribute("href", "https://onymaweb.south.rt.ru/onyma/main/dogsearch.htms?menuitem=1851&_cc=1&__rpp=0&pg=0");
         newElem2.setAttribute("target", "_blank");
-        newElem2.innerHTML = 'On';//'<img src="https://onymaweb.south.rt.ru/favicon.ico" height="16" width="16">';
-        newElem2.title= 'Onyma'; 
+        newElem2.innerHTML = 'On';
+        newElem2.title = 'Onyma';
         document.getElementById('pp1').append(newElem2);
 
         newElem2 = document.createElement('a');
         newElem2.className = 'ui-menuitem-link ui-submenu-link ui-corner-all';
         newElem2.setAttribute("href", "https://uniapp.south.rt.ru/");
         newElem2.setAttribute("target", "_blank");
-        newElem2.innerHTML = 'Un';//'<img src="https://moscow.old.rt.ru/img/smart-banner/icon.png" height="16" width="16">';
-        newElem2.title= 'UNIAPP';
+        newElem2.innerHTML = 'Un';
+        newElem2.title = 'UNIAPP';
         document.getElementById('pp1').append(newElem2);
 
         newElem2 = document.createElement('a');
         newElem2.className = 'ui-menuitem-link ui-submenu-link ui-corner-all';
         newElem2.setAttribute("href", "http://10.144.35.30:8081/smarttube/master/adminui4/app/login");
         newElem2.setAttribute("target", "_blank");
-        newElem2.innerHTML = 'St';//'<img src="https://www.nginx.com/wp-content/uploads/2019/10/favicon-48x48.ico" height="16" width="16">'
-        newElem2.title= 'ТВ-платформа'; 
+        newElem2.innerHTML = 'St';
+        newElem2.title = 'ТВ-платформа';
         document.getElementById('pp1').append(newElem2);
 
         newElem2 = document.createElement('a');
@@ -160,7 +156,7 @@
         newElem2.setAttribute("href", "http://10.63.1.2:4000/rawlog");
         newElem2.setAttribute("target", "_blank");
         newElem2.text = 'Ra';
-        newElem2.title= 'Rawlog'; 
+        newElem2.title = 'Rawlog';
         document.getElementById('pp1').append(newElem2);
 
         newElem2 = document.createElement('a');
@@ -168,11 +164,27 @@
         newElem2.setAttribute("href", "https://onymaweb.south.rt.ru/onyma/main/ap_mon.htms?menuitem=1921&real_mi=1921&_cc=1&__rpp=0");
         newElem2.setAttribute("target", "_blank");
         newElem2.text = 'Ao';
-        newElem2.title= 'Авторизации'; 
+        newElem2.title = 'Авторизации';
         document.getElementById('pp1').append(newElem2);
     }
 
-    if (document.location.href.match(/.*argus.south.rt.ru\/argus\/views\/supportservice\/incident\/.*/gi)) {
+
+    if (document.location.href.match(/.*taskListView.xhtml.*/gi)) { /// Поиск кабельного ТВ
+        let rre2 = document.getElementById('tbl_frm').querySelectorAll('table')[1].rows;
+        for (let i = 1; i < rre2.length; i++) {
+            if (rre2[i].cells[0].hasAttribute('colspan') == false) { //если таблица не пустая
+                if (rre2[i].innerText.match(/кабельное|docsis/gi)) {
+                    rre2[i].style.background = 'rgb(245 193 192)'
+                }
+            }
+        }
+    }
+
+
+
+
+    if (document.location.href.match(/.*incidentView.xhtml.*/gi)) {
+
         let allForms = document.getElementById('history_tabs-history_form-add_comment');
         allForms.setAttribute("onclick", "window.location.reload()");
         let allForms2 = document.querySelectorAll("li[class='ui-state-default ui-corner-top'], li[class='ui-state-default ui-tabs-selected ui-state-active ui-corner-top']");
@@ -209,13 +221,17 @@
         let matches = document.getElementById('history_tabs-history_form-history_table_data').querySelectorAll("tr");
         for (let i = 0; i < matches.length; i++) {
             let nCell = matches[i].cells[3].firstChild;
-			if (matches[i].cells[0].innerText.match(/выезд/gi)){matches[i].style.background = 'rgb(245 193 192)';}
+            if (matches[i].cells[0].innerText.match(/выезд/gi)) {
+                matches[i].style.background = 'rgb(245 193 192)';
+            }
             if (matches[i].cells[2].innerText == 'Добавлен комментарий') { //для поиска "информативных комментариев
                 var io = matches[i].cells[3].innerText.replace(/[^\n]*/gi, "").length;
                 var strStat0 = matches[i].cells[3].innerText.replace(fTags, "");
                 var strStat1 = strStat0.replace(/[^а-я^ё]|\d{1,7}/gi, "").length; //оставляем только кирилицу и номера (кт и т.д)
                 var strStat2 = strStat0.replace(/[а-яё\s]|\d{1,7}/gi, "").length;
-                if (io < 2 && (strStat1 > strStat2)) {matches[i].style.background = "#FFFF99";}
+                if (io < 2 && (strStat1 > strStat2)) {
+                    matches[i].style.background = "#FFFF99";
+                }
             }
             nCell.innerHTML = nCell.innerHTML.replace(/[\/\-]ethernet/gi, " Ethernet"); // нужно ждя того, что бы нt искалхостнеймы "бла-блабла-хостнейм-ethernet"
             nCell.innerHTML = nCell.innerHTML.replace(fIp, "<b style='color:#1100FF;	font-size:12pt' >$&</b>");
