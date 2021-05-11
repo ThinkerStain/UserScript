@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Light4
 // @namespace    http://tampermonkey.net/
-// @version      0.087
+// @version      0.088
 // @description  Упрощаем работу глазам
 // @author       Yuriy.Klimovich@south.rt.ru
 // @include        *argus.south.rt.ru/argus/views/supportservice/incident/*
@@ -15,9 +15,6 @@
 // @unsafeWindow
 // ==/UserScript==
 (function() {
-
-    
-
 
     'use strict';
     if (document.location.href.match(/.*onyma\/main\/.*/gi)) {
