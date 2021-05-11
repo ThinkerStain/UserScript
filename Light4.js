@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Light4
 // @namespace    http://tampermonkey.net/
-// @version      0.0881
+// @version      0.09
 // @description  Упрощаем работу глазам
 // @author       Yuriy.Klimovich@south.rt.ru
 // @include        *argus.south.rt.ru/argus*
@@ -15,44 +15,69 @@
 // ==/UserScript==
 (function() {
 
+
     'use strict';
-    if (document.location.href.match(/.*onyma\/main\/.*/gi)) {
-        if (document.location.href.match(/.*ap_logs.htms.*/gi)) {
-            //Функция очистки инпутов
-            function clrInput() {
-                let yui = document.getElementById('frm').querySelectorAll('input[class="small"][type="text"]');
-                for (let j = 0; j < yui.length; j++) {
-                    yui[j].value = "";
-                    document.getElementById('filt').click();
-                }
-            }
-            let fGP = document.getElementById('frm').querySelector('table').rows;
-            for (let i = 4; i < fGP.length; i++) {
-                let fGPmac = fGP[i].cells[9].innerText.match(/(MAC:)*([a-fA-F\d]{2}[\.\-\:_]{1}){5}[a-fA-F\d]{2}|(MAC:)*([a-fA-F\d]{4}[\.\-:_]{1}){2}[a-fA-F\d]{4}/gi);
-                if (fGPmac != null) {
-                    fGPmac = String(fGPmac).replace(/mac:*/gi, "");
-                    let newE = document.createElement('i');
-                    newE.addEventListener("click", function() {
-                        clrInput();
-                        document.getElementById('sess_rem').value = '%' + fGPmac + '%';
-                        document.getElementById('filt').click();
-                    }, false);
-                    newE.innerHTML = 'mac';
-                    fGP[i].cells[9].after(newE);
-                }
-                let fLog = String(fGP[i].cells[3].innerText).replace(/"/gi, '');
-                if (fLog != null) {
-                    let newE2 = document.createElement('i');
-                    newE2.addEventListener("click", function() {
-                        clrInput();
-                        document.getElementById('login').value = fLog;
-                        document.getElementById('filt').click();
-                    }, false);
-                    newE2.innerHTML = 'login ';
-                    fGP[i].cells[9].after(newE2);
-                }
-            }
+if (document.location.href.match(/.*onyma\/main\/.*/gi)) {
+if (document.location.href.match(/.*ap_logs.htms.*/gi)) {
+    //Функция очистки инпутов
+    function clrInput() {
+        let yui = document.getElementById('frm').querySelectorAll('input[class="small"][type="text"]');
+        for (let j = 0; j < yui.length; j++) {
+            yui[j].value = "";
+            document.getElementById('filt').click();
         }
+    }
+    let fGP = document.getElementById('frm').querySelector('table').rows;
+    for (let i = 4; i < fGP.length; i++) {
+        let cLngth = fGP[i].cells.length - 1;
+        let fLog = String(fGP[i].cells[3].innerText).replace(/"/gi, '');
+        if (fLog != null) {
+            let newE2 = document.createElement('a');
+            newE2.addEventListener("click", function() {
+                clrInput();
+                document.getElementById('login').value = fLog;
+                document.getElementById('filt').click();
+            }, false);
+            newE2.innerHTML = 'L';
+            fGP[i].cells[cLngth].after(newE2);
+        }
+        let fGPmac = fGP[i].cells[cLngth].innerText.match(/(MAC:)*([a-fA-F\d]{2}[\.\-\:_]{1}){5}[a-fA-F\d]{2}|(MAC:)*([a-fA-F\d]{4}[\.\-:_]{1}){2}[a-fA-F\d]{4}/gi);
+        if (fGPmac != null) {
+            fGPmac = String(fGPmac).replace(/mac:*/gi, "");
+            let newE = document.createElement('a');
+            newE.addEventListener("click", function() {
+                clrInput();
+                document.getElementById('sess_rem').value = '%' + fGPmac + '%';
+                document.getElementById('filt').click();
+            }, false);
+            newE.innerHTML = 'M';
+            fGP[i].cells[cLngth].after(newE);
+        }
+        let regH = /(23(A(FIP|ZOV)|CHER|GR(IG|KL)|ILSK|LVOV|MIHA|NOVO|S(EV|MOL|TAV)|UBIN)|A(DY*G*|ST)|(AFIP|CHER|GRKL|SEV)23|DAG*|ING*|K(LM*|BR*|R*DA*|C(R|H))|NZR|R(ND|o|OS|ST|H)|S(T(A|V)|SI|V*O)|V[LG]G)[\-_][a-zA-Z\d\-\._]+[\/\d\b\s\|a-z:;#_>]*(\/)*\d+\/\d+(\/\d+)*/gi
+        let fHname = String(fGP[i].cells[cLngth].innerText).match(regH);
+        if (fHname != null) {
+            let newE2 = document.createElement('a');
+            newE2.addEventListener("click", function() {
+                clrInput();
+                document.getElementById('sess_rem').value = '%' + fHname + '%';
+                document.getElementById('filt').click();
+            }, false);
+            newE2.innerHTML = 'H';
+            fGP[i].cells[cLngth].after(newE2);
+        }
+        let fAname = String(fGP[i].cells[2].innerText).match(regH);
+        if (fAname != null) {
+            let newE2 = document.createElement('a');
+            newE2.addEventListener("click", function() {
+                clrInput();
+                document.getElementById('sessid').value = '%' + fAname + '%';
+                document.getElementById('filt').click();
+            }, false);
+            newE2.innerHTML = 'A';
+            fGP[i].cells[cLngth].after(newE2);
+        }
+    }
+}
 
 
 
