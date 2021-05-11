@@ -18,7 +18,7 @@
 
     'use strict';
     if (document.location.href.match(/.*onyma\/main\/.*/gi)) {
-        if (document.location.href.match(/.*ap_logs.htms.*/gi)) {
+        if (document.location.href.match(/.*ap_logs\.htms.*/gi)) {
             //Функция очистки инпутов
             function clrInput() {
                 let yui = document.getElementById('frm').querySelectorAll('input[class="small"][type="text"]');
