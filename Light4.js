@@ -4,7 +4,6 @@
 // @version      0.088
 // @description  Упрощаем работу глазам
 // @author       Yuriy.Klimovich@south.rt.ru
-// @include        *argus.south.rt.ru/argus/views/supportservice/incident/*
 // @include        *argus.south.rt.ru/argus*
 // @include        *onyma/main/*
 // @require     https://github.com/ThinkerStain/UserScript/raw/main/Light4.js
@@ -18,7 +17,7 @@
 
     'use strict';
     if (document.location.href.match(/.*onyma\/main\/.*/gi)) {
-        if (document.location.href.match(/.*ap_logs\.htms.*/gi)) {
+        if (document.location.href.match(/.*ap_logs.htms.*/gi)) {
             //Функция очистки инпутов
             function clrInput() {
                 let yui = document.getElementById('frm').querySelectorAll('input[class="small"][type="text"]');
