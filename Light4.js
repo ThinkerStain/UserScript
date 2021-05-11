@@ -6,15 +6,15 @@
 // @author       Yuriy.Klimovich@south.rt.ru
 // @include        *argus.south.rt.ru/argus*
 // @include        *onyma/main/*
-// @require     https://github.com/ThinkerStain/UserScript/raw/main/Light4.js
-// @updateURL   https://github.com/ThinkerStain/UserScript/raw/main/Light4.js
+
 
 
 
 // @unsafeWindow
 // ==/UserScript==
 (function() {
-
+// @require     https://github.com/ThinkerStain/UserScript/raw/main/Light4.js
+// @updateURL   https://github.com/ThinkerStain/UserScript/raw/main/Light4.js
 
     'use strict';
 if (document.location.href.match(/.*onyma\/main\/.*/gi)) {
@@ -237,7 +237,7 @@ if (document.location.href.match(/.*ap_logs.htms.*/gi)) {
         let rre2 = document.getElementById('tbl_frm').querySelectorAll('table')[1].rows;
         for (let i = 1; i < rre2.length; i++) {
             if (rre2[i].cells[0].hasAttribute('colspan') == false) { //если таблица не пустая
-                if (rre2[i].innerText.match(/кабельное|docsis/gi)) {
+                if (rre2[i].innerText.match(/Кабельное|docsis/gi)) {
                     rre2[i].style.background = 'rgb(245 193 192)'
                 }
             }
