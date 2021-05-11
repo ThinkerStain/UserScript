@@ -1,25 +1,67 @@
 // ==UserScript==
 // @name         Light4
 // @namespace    http://tampermonkey.net/
-// @version      0.086
+// @version      0.087
 // @description  Упрощаем работу глазам
 // @author       Yuriy.Klimovich@south.rt.ru
 // @include        *argus.south.rt.ru/argus/views/supportservice/incident/*
 // @include        *argus.south.rt.ru/argus*
-// @include        *onyma/main/clsrv.htms*
-// @include        *onyma/main/dog.htms?*
-// @require      https://github.com/ThinkerStain/UserScript/raw/main/Light4.js
+// @include        *onyma/main/*
+// @require     https://github.com/ThinkerStain/UserScript/raw/main/Light4.js
 // @updateURL   https://github.com/ThinkerStain/UserScript/raw/main/Light4.js
+
 
 
 // @unsafeWindow
 // ==/UserScript==
 (function() {
-    'use strict';
-    ///ui-grid-col-7_5 text-right див с полем для ввода коммента
 
+    
+
+
+    'use strict';
     if (document.location.href.match(/.*onyma\/main\/.*/gi)) {
-        if (document.location.href.match(/.*dog.htms?.*/gi)) {
+        if (document.location.href.match(/.*ap_logs.htms.*/gi)) {
+            //Функция очистки инпутов
+            function clrInput() {
+                let yui = document.getElementById('frm').querySelectorAll('input[class="small"][type="text"]');
+                for (let j = 0; j < yui.length; j++) {
+                    yui[j].value = "";
+                    document.getElementById('filt').click();
+                }
+            }
+            let fGP = document.getElementById('frm').querySelector('table').rows;
+            for (let i = 4; i < fGP.length; i++) {
+                let fGPmac = fGP[i].cells[9].innerText.match(/(MAC:)*([a-fA-F\d]{2}[\.\-\:_]{1}){5}[a-fA-F\d]{2}|(MAC:)*([a-fA-F\d]{4}[\.\-:_]{1}){2}[a-fA-F\d]{4}/gi);
+                if (fGPmac != null) {
+                    fGPmac = String(fGPmac).replace(/mac:*/gi, "");
+                    let newE = document.createElement('i');
+                    newE.addEventListener("click", function() {
+                        clrInput();
+                        document.getElementById('sess_rem').value = '%' + fGPmac + '%';
+                        document.getElementById('filt').click();
+                    }, false);
+                    newE.innerHTML = 'mac';
+                    fGP[i].cells[9].after(newE);
+                }
+                let fLog = String(fGP[i].cells[3].innerText).replace(/"/gi, '');
+                if (fLog != null) {
+                    let newE2 = document.createElement('i');
+                    newE2.addEventListener("click", function() {
+                        clrInput();
+                        document.getElementById('login').value = fLog;
+                        document.getElementById('filt').click();
+                    }, false);
+                    newE2.innerHTML = 'login ';
+                    fGP[i].cells[9].after(newE2);
+                }
+            }
+        }
+
+
+
+
+        if (document.location.href.match(/.*dog.htms.*/gi)) {
             var e0 = document.querySelector('#aval\\[202\\]');
             if (e0 != null) {
                 if (e0.value == '') {
@@ -61,7 +103,7 @@
             }
         }
 
-        if (document.location.href.match(/.*clsrv.htms?.*/gi)) {
+        if (document.location.href.match(/.*clsrv.htms.*/gi)) {
             var q0 = document.querySelector('a[title="\\[ЮТК\\] Сервис IPTV"]').parentNode.querySelector('i');
             if (q0 != undefined) {
                 var nStr = q0.innerHTML.replace(/\D+/gi, "");
@@ -321,6 +363,8 @@
             }
             return s.replace(text, convert);
         }
+
+
     }
 
 })();
