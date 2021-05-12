@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Light4
 // @namespace    http://tampermonkey.net/
-// @version      0.091
+// @version      0.092
 // @description  Упрощаем работу глазам
 // @author       Yuriy.Klimovich@south.rt.ru
 // @include        *argus.south.rt.ru/argus*
@@ -18,7 +18,7 @@
 
     'use strict';
 if (document.location.href.match(/.*onyma\/main\/.*/gi)) {
-if (document.location.href.match(/.*ap_logs.htms.*/gi)) {
+if (document.location.href.match(/.*ap_logs.htms.*/gi)) { //Поиск в ониме по хостнейму, аномеру, логину, маку
     //Функция очистки инпутов
     function clrInput() {
         let yui = document.getElementById('frm').querySelectorAll('input[class="small"][type="text"]');
@@ -79,11 +79,8 @@ if (document.location.href.match(/.*ap_logs.htms.*/gi)) {
     }
 }
 
-
-
-
-        if (document.location.href.match(/.*dog.htms.*/gi)) {
-            var e0 = document.querySelector('#aval\\[202\\]');
+        if (document.location.href.match(/.*dog.htms.*/gi)) {// Функции в ониме
+            var e0 = document.querySelector('#aval\\[202\\]');// Ссылка на универсальный клиент около "Уникальный номер клиента в АСР"
             if (e0 != null) {
                 if (e0.value == '') {
                     e0.style.backgroundColor = 'rgb(245 193 192)'
@@ -98,7 +95,7 @@ if (document.location.href.match(/.*ap_logs.htms.*/gi)) {
                 }
             }
 
-            let e3 = document.getElementById('filt_form').parentNode.parentNode.parentNode.rows;
+            let e3 = document.getElementById('filt_form').parentNode.parentNode.parentNode.rows; // Подстветка удаленных, активных и паузных услуг в ониме
             let nSt =0;
             if (e3[0].innerText.match(/Учетные имена/gi)){nSt = 1} else {nSt = 2}//Нужно из-за разного оторбражения фин. и тех. информации
             for (let i = nSt; i < e3.length; i++) { //2
@@ -117,16 +114,18 @@ if (document.location.href.match(/.*ap_logs.htms.*/gi)) {
                     e3[i].cells[2].style.background = 'rgb(245 193 192)';
                 }
                 if (e3[i].innerText.match(/active/gi)) {
+                    if (e3[i].cells[0].innerText.match(/^(04|i0|et|rt|rs|dsl)/gi)){
                     e3[i].cells[0].style.background = 'rgb(193 245 192)';
                     e3[i].cells[1].style.background = 'rgb(193 245 192)';
                     e3[i].cells[2].style.background = 'rgb(193 245 192)';
+                }
                 }
 
             }
         }
 
         if (document.location.href.match(/.*clsrv.htms.*/gi)) {
-            var q0 = document.querySelector('a[title="\\[ЮТК\\] Сервис IPTV"]').parentNode.querySelector('i');
+            var q0 = document.querySelector('a[title="\\[ЮТК\\] Сервис IPTV"]').parentNode.querySelector('i'); //Ссылка в ониме по Логину ТВ приставки на ТВплатформу
             if (q0 != undefined) {
                 var nStr = q0.innerHTML.replace(/\D+/gi, "");
                 q0.innerHTML = "(<a target='_blank' style='color:red;' href='http://10.144.35.30:8081/smarttube/master/adminui4/app/ServiceAccount/list?number=%25" + nStr + "%25'>" + nStr + "</a>)";
@@ -245,9 +244,6 @@ if (document.location.href.match(/.*ap_logs.htms.*/gi)) {
         }
     }
 
-
-
-
     if (document.location.href.match(/.*incidentView.xhtml.*/gi)) {
 
         let allForms = document.getElementById('history_tabs-history_form-add_comment');
@@ -346,7 +342,7 @@ if (document.location.href.match(/.*ap_logs.htms.*/gi)) {
                         break;
                     case 3: //ДОДЕЛАТЬ ДЛЯ ПОН /0/0/0/0 // 101091510 НЕ СВЕТИТ хостнеймы
                         if (str.match(/[a-z\d\.\-_]+[^\b^\s^\/^:^#>]/gi)) {
-                            var nHost = str.match(/[a-z\d\.\-_]+[^\b^\s^\/^:^#>]/gi)[0];
+                            var nHost = str.match(/[a-z\d\.\-_]+[^\b^\s^\/^:^#&]/gi)[0];
                             str = str.replace(nHost, "");
                             var nReg = nHost.match(/[a-z\d]{3}/gi)[0];
                             var nPorts0 = str.match(/(\d+\/){1,2}\d+$/gi)[0];
@@ -379,14 +375,12 @@ if (document.location.href.match(/.*ap_logs.htms.*/gi)) {
                 case 2:
                     text = /\"[a-zA-Z\d]{8,}\"/gi;
                     break;
-                case 3: ///(^|[^a-z])
-                    text = /(^|[^a-z]|[^>])(23(A(FIP|ZOV)|CHER|GR(IG|KL)|ILSK|LVOV|MIHA|NOVO|S(EV|MOL|TAV)|UBIN)|A(DY*G*|ST)|(AFIP|CHER|GRKL|SEV)23|DAG*|ING*|K(LM*|BR*|R*DA*|C(R|H))|NZR|R(ND|o|OS|ST|H)|S(T(A|V)|SI|V*O)|V[LG]G)[\-_][a-zA-Z\d\-\._]+[\/\d\b\s\|a-z:;#_>]*(\/)*\d+\/\d+(\/\d+)*/gi;
+                case 3: ///(^|[^a-z]) &gt; ===   >
+                    text = /(^|[^a-z]|[^>])(23(A(FIP|ZOV)|CHER|GR(IG|KL)|ILSK|LVOV|MIHA|NOVO|S(EV|MOL|TAV)|UBIN)|A(DY*G*|ST)|(AFIP|CHER|GRKL|SEV)23|DAG*|ING*|K|K(LM*|BR*|R*DA*|C(R|H))|NZR|R(ND|o|OS|ST|H)|S(T(A|V)|SI|V*O)|V[LG]G)[\-_][a-zA-Z\d\-\._]+[\/\d\b\s\|a-z:;#_|&gt;]*(\/)*\d+\/\d+(\/\d+)*/gi;
                     break;
             }
             return s.replace(text, convert);
         }
-
-
     }
 
 })();
