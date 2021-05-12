@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Light4
 // @namespace    http://tampermonkey.net/
-// @version      0.09
+// @version      0.091
 // @description  Упрощаем работу глазам
 // @author       Yuriy.Klimovich@south.rt.ru
 // @include        *argus.south.rt.ru/argus*
@@ -99,7 +99,9 @@ if (document.location.href.match(/.*ap_logs.htms.*/gi)) {
             }
 
             let e3 = document.getElementById('filt_form').parentNode.parentNode.parentNode.rows;
-            for (let i = 1; i < e3.length; i++) {
+            let nSt =0;
+            if (e3[0].innerText.match(/Учетные имена/gi)){nSt = 1} else {nSt = 2}//Нужно из-за разного оторбражения фин. и тех. информации
+            for (let i = nSt; i < e3.length; i++) { //2
                 let dop = e3[i].cells[2].innerHTML;
                 e3[i].cells[2].innerHTML = e3[i].cells[1].innerHTML;
                 e3[i].cells[1].innerHTML = dop;
@@ -108,7 +110,6 @@ if (document.location.href.match(/.*ap_logs.htms.*/gi)) {
                     e3[i].cells[0].style.background = 'rgb(245 193 192)';
                     e3[i].cells[1].style.background = 'rgb(245 193 192)';
                     e3[i].cells[2].style.background = 'rgb(245 193 192)';
-
                 }
                 if (e3[i].innerText.match(/paused by system/gi)) {
                     e3[i].cells[0].style.background = 'rgb(255 255 153)';
