@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Light4
 // @namespace    http://tampermonkey.net/
-// @version      0.092
+// @version      0.093
 // @description  Упрощаем работу глазам
 // @author       Yuriy.Klimovich@south.rt.ru
 // @include        *argus.south.rt.ru/argus*
@@ -13,74 +13,73 @@
 // @unsafeWindow
 // ==/UserScript==
 (function() {
-// @require     https://github.com/ThinkerStain/UserScript/raw/main/Light4.js
-// @updateURL   https://github.com/ThinkerStain/UserScript/raw/main/Light4.js
+    // @require     https://github.com/ThinkerStain/UserScript/raw/main/Light4.js
+    // @updateURL   https://github.com/ThinkerStain/UserScript/raw/main/Light4.js
 
     'use strict';
-if (document.location.href.match(/.*onyma\/main\/.*/gi)) {
-if (document.location.href.match(/.*ap_logs.htms.*/gi)) { //Поиск в ониме по хостнейму, аномеру, логину, маку
-    //Функция очистки инпутов
-    function clrInput() {
-        let yui = document.getElementById('frm').querySelectorAll('input[class="small"][type="text"]');
-        for (let j = 0; j < yui.length; j++) {
-            yui[j].value = "";
-            document.getElementById('filt').click();
+    if (document.location.href.match(/.*onyma\/main\/.*/gi)) {
+        if (document.location.href.match(/.*ap_logs.htms.*/gi)) { //Поиск в ониме по хостнейму, аномеру, логину, маку
+            //Функция очистки инпутов
+            function clrInput() {
+                let yui = document.getElementById('frm').querySelectorAll('input[class="small"][type="text"]');
+                for (let j = 0; j < yui.length; j++) {
+                    yui[j].value = "";
+                    document.getElementById('filt').click();
+                }
+            }
+            let fGP = document.getElementById('frm').querySelector('table').rows;
+            for (let i = 4; i < fGP.length; i++) {
+                let cLngth = fGP[i].cells.length - 1;
+                let fLog = String(fGP[i].cells[3].innerText).replace(/"/gi, '');
+                if (fLog != null) {
+                    let newE2 = document.createElement('a');
+                    newE2.addEventListener("click", function() {
+                        clrInput();
+                        document.getElementById('login').value = fLog;
+                        document.getElementById('filt').click();
+                    }, false);
+                    newE2.innerHTML = 'L';
+                    fGP[i].cells[cLngth].after(newE2);
+                }
+                let fGPmac = fGP[i].cells[cLngth].innerText.match(/(MAC:)*([a-fA-F\d]{2}[\.\-\:_]{1}){5}[a-fA-F\d]{2}|(MAC:)*([a-fA-F\d]{4}[\.\-:_]{1}){2}[a-fA-F\d]{4}/gi);
+                if (fGPmac != null) {
+                    fGPmac = String(fGPmac).replace(/mac:*/gi, "");
+                    let newE = document.createElement('a');
+                    newE.addEventListener("click", function() {
+                        clrInput();
+                        document.getElementById('sess_rem').value = '%' + fGPmac + '%';
+                        document.getElementById('filt').click();
+                    }, false);
+                    newE.innerHTML = 'M';
+                    fGP[i].cells[cLngth].after(newE);
+                }
+                let regH = /(23(A(FIP|ZOV)|CHER|GR(IG|KL)|ILSK|LVOV|MIHA|NOVO|S(EV|MOL|TAV)|UBIN)|A(DY*G*|ST)|(AFIP|CHER|GRKL|SEV)23|DAG*|ING*|K(LM*|BR*|R*DA*|C(R|H))|NZR|R(ND|o|OS|ST|H)|S(T(A|V)|SI|V*O)|V[LG]G)[\-_][a-zA-Z\d\-\._]+[\/\d\b\s\|a-z:;#_>]*(\/)*\d+\/\d+(\/\d+)*/gi
+                let fHname = String(fGP[i].cells[cLngth].innerText).match(regH);
+                if (fHname != null) {
+                    let newE2 = document.createElement('a');
+                    newE2.addEventListener("click", function() {
+                        clrInput();
+                        document.getElementById('sess_rem').value = '%' + fHname + '%';
+                        document.getElementById('filt').click();
+                    }, false);
+                    newE2.innerHTML = 'H';
+                    fGP[i].cells[cLngth].after(newE2);
+                }
+                let fAname = String(fGP[i].cells[2].innerText).match(regH);
+                if (fAname != null) {
+                    let newE2 = document.createElement('a');
+                    newE2.addEventListener("click", function() {
+                        clrInput();
+                        document.getElementById('sessid').value = '%' + fAname + '%';
+                        document.getElementById('filt').click();
+                    }, false);
+                    newE2.innerHTML = 'A';
+                    fGP[i].cells[cLngth].after(newE2);
+                }
+            }
         }
-    }
-    let fGP = document.getElementById('frm').querySelector('table').rows;
-    for (let i = 4; i < fGP.length; i++) {
-        let cLngth = fGP[i].cells.length - 1;
-        let fLog = String(fGP[i].cells[3].innerText).replace(/"/gi, '');
-        if (fLog != null) {
-            let newE2 = document.createElement('a');
-            newE2.addEventListener("click", function() {
-                clrInput();
-                document.getElementById('login').value = fLog;
-                document.getElementById('filt').click();
-            }, false);
-            newE2.innerHTML = 'L';
-            fGP[i].cells[cLngth].after(newE2);
-        }
-        let fGPmac = fGP[i].cells[cLngth].innerText.match(/(MAC:)*([a-fA-F\d]{2}[\.\-\:_]{1}){5}[a-fA-F\d]{2}|(MAC:)*([a-fA-F\d]{4}[\.\-:_]{1}){2}[a-fA-F\d]{4}/gi);
-        if (fGPmac != null) {
-            fGPmac = String(fGPmac).replace(/mac:*/gi, "");
-            let newE = document.createElement('a');
-            newE.addEventListener("click", function() {
-                clrInput();
-                document.getElementById('sess_rem').value = '%' + fGPmac + '%';
-                document.getElementById('filt').click();
-            }, false);
-            newE.innerHTML = 'M';
-            fGP[i].cells[cLngth].after(newE);
-        }
-        let regH = /(23(A(FIP|ZOV)|CHER|GR(IG|KL)|ILSK|LVOV|MIHA|NOVO|S(EV|MOL|TAV)|UBIN)|A(DY*G*|ST)|(AFIP|CHER|GRKL|SEV)23|DAG*|ING*|K(LM*|BR*|R*DA*|C(R|H))|NZR|R(ND|o|OS|ST|H)|S(T(A|V)|SI|V*O)|V[LG]G)[\-_][a-zA-Z\d\-\._]+[\/\d\b\s\|a-z:;#_>]*(\/)*\d+\/\d+(\/\d+)*/gi
-        let fHname = String(fGP[i].cells[cLngth].innerText).match(regH);
-        if (fHname != null) {
-            let newE2 = document.createElement('a');
-            newE2.addEventListener("click", function() {
-                clrInput();
-                document.getElementById('sess_rem').value = '%' + fHname + '%';
-                document.getElementById('filt').click();
-            }, false);
-            newE2.innerHTML = 'H';
-            fGP[i].cells[cLngth].after(newE2);
-        }
-        let fAname = String(fGP[i].cells[2].innerText).match(regH);
-        if (fAname != null) {
-            let newE2 = document.createElement('a');
-            newE2.addEventListener("click", function() {
-                clrInput();
-                document.getElementById('sessid').value = '%' + fAname + '%';
-                document.getElementById('filt').click();
-            }, false);
-            newE2.innerHTML = 'A';
-            fGP[i].cells[cLngth].after(newE2);
-        }
-    }
-}
-
-        if (document.location.href.match(/.*dog.htms.*/gi)) {// Функции в ониме
-            var e0 = document.querySelector('#aval\\[202\\]');// Ссылка на универсальный клиент около "Уникальный номер клиента в АСР"
+        if (document.location.href.match(/.*dog.htms.*/gi)) { // Функции в ониме
+            var e0 = document.querySelector('#aval\\[202\\]'); // Ссылка на универсальный клиент около "Уникальный номер клиента в АСР"
             if (e0 != null) {
                 if (e0.value == '') {
                     e0.style.backgroundColor = 'rgb(245 193 192)'
@@ -94,10 +93,13 @@ if (document.location.href.match(/.*ap_logs.htms.*/gi)) { //Поиск в они
                     e0.after(newElem0);
                 }
             }
-
             let e3 = document.getElementById('filt_form').parentNode.parentNode.parentNode.rows; // Подстветка удаленных, активных и паузных услуг в ониме
-            let nSt =0;
-            if (e3[0].innerText.match(/Учетные имена/gi)){nSt = 1} else {nSt = 2}//Нужно из-за разного оторбражения фин. и тех. информации
+            let nSt = 0;
+            if (e3[0].innerText.match(/Учетные имена/gi)) {
+                nSt = 1
+            } else {
+                nSt = 2
+            } //Нужно из-за разного оторбражения фин. и тех. информации
             for (let i = nSt; i < e3.length; i++) { //2
                 let dop = e3[i].cells[2].innerHTML;
                 e3[i].cells[2].innerHTML = e3[i].cells[1].innerHTML;
@@ -108,17 +110,17 @@ if (document.location.href.match(/.*ap_logs.htms.*/gi)) { //Поиск в они
                     e3[i].cells[1].style.background = 'rgb(245 193 192)';
                     e3[i].cells[2].style.background = 'rgb(245 193 192)';
                 }
-                if (e3[i].innerText.match(/paused by system/gi)) {
+                if (e3[i].innerText.match(/paused by/gi)) {
                     e3[i].cells[0].style.background = 'rgb(255 255 153)';
-                    e3[i].cells[1].style.background = 'rgb(245 193 192)';
-                    e3[i].cells[2].style.background = 'rgb(245 193 192)';
+                    e3[i].cells[1].style.background = 'rgb(255 255 153)';
+                    e3[i].cells[2].style.background = 'rgb(255 255 153)';
                 }
                 if (e3[i].innerText.match(/active/gi)) {
-                    if (e3[i].cells[0].innerText.match(/^(04|i0|et|rt|rs|dsl)/gi)){
-                    e3[i].cells[0].style.background = 'rgb(193 245 192)';
-                    e3[i].cells[1].style.background = 'rgb(193 245 192)';
-                    e3[i].cells[2].style.background = 'rgb(193 245 192)';
-                }
+                    if (e3[i].cells[0].innerText.match(/^(04|863\d{0,7}\D|i0|et|rt|rs|dsl|ssg|ipo)/gi)) {
+                        e3[i].cells[0].style.background = 'rgb(193 245 192)';
+                        e3[i].cells[1].style.background = 'rgb(193 245 192)';
+                        e3[i].cells[2].style.background = 'rgb(193 245 192)';
+                    }
                 }
 
             }
@@ -130,7 +132,6 @@ if (document.location.href.match(/.*ap_logs.htms.*/gi)) { //Поиск в они
                 var nStr = q0.innerHTML.replace(/\D+/gi, "");
                 q0.innerHTML = "(<a target='_blank' style='color:red;' href='http://10.144.35.30:8081/smarttube/master/adminui4/app/ServiceAccount/list?number=%25" + nStr + "%25'>" + nStr + "</a>)";
             }
-
             var e1 = document.querySelector('#prop\\[8545\\]');
             if (e1 != null) {
                 if (e1.value == '') { //если мака нет в строке
@@ -158,7 +159,8 @@ if (document.location.href.match(/.*ap_logs.htms.*/gi)) { //Поиск в они
     }
 
     if (document.location.href.match(/.*argus.south.rt.ru\/.*/gi)) {
-        //alert('11');
+        var zReg = ""; //Поиск региона
+
         let mmu = document.getElementById('main_menu_unit');
         let fdu = mmu.querySelector('form > div > ul');
         newElem = document.createElement('li');
@@ -231,8 +233,6 @@ if (document.location.href.match(/.*ap_logs.htms.*/gi)) { //Поиск в они
         newElem2.title = 'Авторизации';
         document.getElementById('pp1').append(newElem2);
     }
-
-
     if (document.location.href.match(/.*taskListView.xhtml.*/gi)) { /// Поиск кабельного ТВ
         let rre2 = document.getElementById('tbl_frm').querySelectorAll('table')[1].rows;
         for (let i = 1; i < rre2.length; i++) {
@@ -245,14 +245,9 @@ if (document.location.href.match(/.*ap_logs.htms.*/gi)) { //Поиск в они
     }
 
     if (document.location.href.match(/.*incidentView.xhtml.*/gi)) {
-
         let allForms = document.getElementById('history_tabs-history_form-add_comment');
         allForms.setAttribute("onclick", "window.location.reload()");
         let allForms2 = document.querySelectorAll("li[class='ui-state-default ui-corner-top'], li[class='ui-state-default ui-tabs-selected ui-state-active ui-corner-top']");
-        //  for (let i = 0; i < allForms2.length; i++) {//alert('11');
-        //  allForms2[i].setAttribute("onclick", "window.location.reload()");}
-
-
         let scrolD = document.querySelector(".ui-datatable-scrollable-body");
         newElem2 = document.createElement('span');
         newElem2.addEventListener("click", function() {
@@ -266,12 +261,11 @@ if (document.location.href.match(/.*ap_logs.htms.*/gi)) { //Поиск в они
         }, false);
         newElem2.innerHTML = '<b style="color:#009900">&nbsp;ВВЕРХ</b>';
         document.getElementById('history_tabs-history_form-new_comment').parentNode.before(newElem2);
-
         let fPersNum = "467181"; //Поиск своих комментов
         let fTV = ['^f8:a0:97', '^00:1a:79', '^ec:4c:4d', '^0c:56:5c', '^1c:bb:a8', '^00:02:9b', '^f4:0e:83', '^00:07:67', '^d8:af:81', '^e4:27', '^bc:64', '^5c:b0', '^7c:6d', '^14:2e', '^60:ce'];
         let fTime = /((&nbsp;)|\s)([0-1]*\d|2[0-3]):[0-5]\d((&nbsp;)|(\s|\b))*/g;
         let fData = /((&nbsp;)|\s)*([0-2]*\d|3[0-1])[\.\-](0\d|1[0-2])[\.\-](202\d|2\d)((&nbsp;)|\s)*/g;
-        let fIp = /((2(5[0-5]|[0-4]\d)|1*\d{2}|\d)\.){3}(2(5[0-5]|[0-4]\d)|1*\d{2}|\d)\b/g; // Правило сверки IP
+        let fIp = /(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)/g
         let fIgmpIp = /igmp:\/\/((2(5[0-5]|[0-4]\d)|1*\d{2}|\d)\.){3}(2(5[0-5]|[0-4]\d)|1*\d{2}|\d):\d+/g
         let fNLS = /\s+4\d{11}\s*/g; //находим хостнейм во вторичке
         let fDopRab = /(ДОПРАБ|ВЫЕЗД|СПД|ПРМОН|CRM)\-\d{7,}/g;
@@ -295,15 +289,15 @@ if (document.location.href.match(/.*ap_logs.htms.*/gi)) { //Поиск в они
                 }
             }
             nCell.innerHTML = nCell.innerHTML.replace(/[\/\-]ethernet/gi, " Ethernet"); // нужно ждя того, что бы нt искалхостнеймы "бла-блабла-хостнейм-ethernet"
-            nCell.innerHTML = nCell.innerHTML.replace(fIp, "<b style='color:#1100FF;	font-size:12pt' >$&</b>");
+            nCell.innerHTML = nCell.innerHTML.replace(fIp, "<b class='f_ip' style='color:#1100FF;	font-size:12pt' >$&</b>");
             nCell.innerHTML = nCell.innerHTML.replace(fNLS, "<b style='color:#1100FF;	font-size:12pt' >$&</b>");
             nCell.innerHTML = nCell.innerHTML.replace(fData, "<b style='color:#1100FF;	font-size:12pt' >$&</b>");
             nCell.innerHTML = nCell.innerHTML.replace(fDopRab, "<b style='color:#CC0000;	font-size:12pt' >$&</b>");
             nCell.innerHTML = dopRepl(nCell.innerHTML, 1);
-            nCell.innerHTML = dopRepl(nCell.innerHTML, 2);
             nCell.innerHTML = dopRepl(nCell.innerHTML, 3);
+            nCell.innerHTML = dopRepl(nCell.innerHTML, 2);
             nCell.innerHTML = nCell.innerHTML.replace(fTime, "<b style='color:#CC0000;	font-size:12pt' >$&</b>");
-            nCell.innerHTML = nCell.innerHTML.replace(fErrorS, "<b style='color:#CC0000; font-size:12pt' >$&</b>");
+            nCell.innerHTML = nCell.innerHTML.replace(fErrorS, "<b class='f_error' style='color:#CC0000; font-size:12pt' >$&</b>");
             nCell.innerHTML = nCell.innerHTML.replace(fUp, "<b style='color:#009900; font-size:12pt' >$&</b>");
             nCell.innerHTML = nCell.innerHTML.replace(fDown, "<b style='color:#CC0000; font-size:12pt' >$&</b>");
         }
@@ -317,6 +311,7 @@ if (document.location.href.match(/.*ap_logs.htms.*/gi)) { //Поиск в они
                         var Raw = "";
                         var SmartT = "";
                         var bezM = str.replace(/^mac[\.\-:]*/gi, "");
+                        //  alert(str);
                         if (str.match(/^mac[\.\-:]*/gi)) {
                             sM = str.match(/^mac[\.\-:]*/gi);
                         }
@@ -336,8 +331,56 @@ if (document.location.href.match(/.*ap_logs.htms.*/gi)) { //Поиск в они
                         break;
                     case 2: //Тут ищем и обрабатываем логины абонента
                         if (str.match(/^".*"$/gi)) {
-                            //http://tr069.south.rt.ru/live/SupportPortal/LEGACYUI/#/cpe/cpeid/N7152292G005744?tab=MainDiag
-                            newStr = "<a target='_blank' href='http://tr069.south.rt.ru/#/cpes/by/CPESearchOptions.cid/value/" + str.replace(/"/g, "") + "?tab=MainDiag'>" + str.replace(/"/g, "") + "</a>"
+                            var nLogin = str.replace(/"/g, "");
+                            var ssString = '';
+                            switch (zReg) {
+                                case 'krd':
+                                    zReg = ['86763', '1000000682', '1000000841'];
+                                    break;
+                                case 'ast':
+                                    zReg = ['86623', '1000000921', '1000000941'];
+                                    break;
+                                case 'klm':
+                                    zReg = ['87543', '2830'];
+                                    break;
+                                case 'rst':
+                                    zReg = ['2989', '97723', '1000000601', '1000000661'];
+                                    break;
+                                case 'vlg':
+                                    zReg = ["85363", "1000000902", "1000000901"];
+                                    break;
+                                case 'kch':
+                                    zReg = ['2990', '3147', '1000000781', '1000000801'];
+                                    break;
+                                case 'dag':
+                                    zReg = ['74663', '87083'];
+                                    break;
+                                case 'kbr':
+                                    zReg = ['2866', '87503'];
+                                    break;
+                                case 'svo':
+                                    zReg = ['1000000981', '1000001121', '85443', '85423', '2990', '3147', '1000000781', '1000000801'];
+                                    break;
+                                case 'stv':
+                                    zReg = ['1000000781', '1000000801'];
+                                    break;
+                                case 'ing':
+                                    zReg = ['2990', '3147', '1000000781', '1000000801'];
+                                    break;
+                                case 'adg':
+                                    zReg = ['86763', '97623', '1000000682', '1000000841', '97703'];
+                                    break;
+                                    //default: zReg = nLogin; break;
+                            }
+                            if (typeof zReg != 'string') {
+                                for (let ir = 0; ir < zReg.length; ir++) {
+                                    ssString += "window.open('https://onymaweb.south.rt.ru/onyma/main/ap_logs.htms?pg=0&__rpp=0&menuitem=245&spg=210&link=" + zReg[ir] + "&login=" + nLogin + "&da1=12.05.21+00:00','_blank');";
+                                }
+                                ssString = "<a href='#' onclick=" + ssString + ">" + nLogin + "</a>&nbsp;";
+                            } else {
+                                ssString = nLogin + " ";
+                            }
+                            newStr = ssString + "<a class='f_login'  target='_blank' href='http://tr069.south.rt.ru/#/cpes/by/CPESearchOptions.cid/value/" + nLogin + "?tab=MainDiag'>TR-69</a>&nbsp;"
                         };
                         break;
                     case 3: //ДОДЕЛАТЬ ДЛЯ ПОН /0/0/0/0 // 101091510 НЕ СВЕТИТ хостнеймы
@@ -345,6 +388,7 @@ if (document.location.href.match(/.*ap_logs.htms.*/gi)) { //Поиск в они
                             var nHost = str.match(/[a-z\d\.\-_]+[^\b^\s^\/^:^#&]/gi)[0];
                             str = str.replace(nHost, "");
                             var nReg = nHost.match(/[a-z\d]{3}/gi)[0];
+                            zReg = nReg.toLowerCase();
                             var nPorts0 = str.match(/(\d+\/){1,2}\d+$/gi)[0];
                             var nPorts = nPorts0.split("/");
                             while (nPorts.length < 3) {
@@ -357,7 +401,7 @@ if (document.location.href.match(/.*ap_logs.htms.*/gi)) { //Поиск в они
                                 }
                             }
                             nPorts = "/" + nPorts[0] + "/" + nPorts[1] + "/" + nPorts[2];
-                            newStr = "<a href='http://ctpdiag.south.rt.ru/?a=" + nHost + nPorts + "&region=" + nReg + "' target='_blank' title='" + nPorts0 + "'>" + nHost + nPorts + "</a>";
+                            newStr = "<a class='f_host' href='http://ctpdiag.south.rt.ru/?a=" + nHost + nPorts + "&region=" + nReg + "' target='_blank' title='" + nPorts0 + "'>" + nHost + nPorts + "</a>";
                         } else {
                             var nPorts2 = str.match(/(\/)*(\d+\/){1,2}\d+$/gi)[0];
                             newStr = "<b style='color:#003300;	font-size:12pt;'>" + nPorts2 + "</b>";
@@ -370,7 +414,7 @@ if (document.location.href.match(/.*ap_logs.htms.*/gi)) { //Поиск в они
             let text = "";
             switch (f) {
                 case 1:
-                    text = /(MAC:)*([a-fA-F\d]{2}[\.\-\:_]{1}){5}[a-fA-F\d]{2}|(MAC:)*([a-fA-F\d]{4}[\.\-:_]{1}){2}[a-fA-F\d]{4}/gi;
+                    text = /(mac:)*([a-fA-F\d]{2}[\.\-\:_]{1}){5}[a-fA-F\d]{2}|(mac:)*([a-fA-F\d]{4}[\.\-:_]{1}){2}[a-fA-F\d]{4}/gi;
                     break;
                 case 2:
                     text = /\"[a-zA-Z\d]{8,}\"/gi;
@@ -381,6 +425,6 @@ if (document.location.href.match(/.*ap_logs.htms.*/gi)) { //Поиск в они
             }
             return s.replace(text, convert);
         }
-    }
 
+    }
 })();
