@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Light4
 // @namespace    http://tampermonkey.net/
-// @version      0.093
+// @version      0.094
 // @description  Упрощаем работу глазам
 // @author       Yuriy.Klimovich@south.rt.ru
 // @include        *argus.south.rt.ru/argus*
@@ -116,7 +116,7 @@
                     e3[i].cells[2].style.background = 'rgb(255 255 153)';
                 }
                 if (e3[i].innerText.match(/active/gi)) {
-                    if (e3[i].cells[0].innerText.match(/^(04|863\d{0,7}\D|i0|et|rt|rs|dsl|ssg|ipo)/gi)) {
+                    if (e3[i].cells[0].innerText.match(/^(04|863\d{0,7}\D|i0|et|rt|rs|dsl[^_]|ssg|ipo|pppoe)/gi)) {
                         e3[i].cells[0].style.background = 'rgb(193 245 192)';
                         e3[i].cells[1].style.background = 'rgb(193 245 192)';
                         e3[i].cells[2].style.background = 'rgb(193 245 192)';
@@ -289,7 +289,7 @@
                 }
             }
             nCell.innerHTML = nCell.innerHTML.replace(/[\/\-]ethernet/gi, " Ethernet"); // нужно ждя того, что бы нt искалхостнеймы "бла-блабла-хостнейм-ethernet"
-            nCell.innerHTML = nCell.innerHTML.replace(fIp, "<b class='f_ip' style='color:#1100FF;	font-size:12pt' >$&</b>");
+          //  nCell.innerHTML = nCell.innerHTML.replace(fIp, "<b class='f_ip' style='color:#1100FF;	font-size:12pt' >$&</b>");
             nCell.innerHTML = nCell.innerHTML.replace(fNLS, "<b style='color:#1100FF;	font-size:12pt' >$&</b>");
             nCell.innerHTML = nCell.innerHTML.replace(fData, "<b style='color:#1100FF;	font-size:12pt' >$&</b>");
             nCell.innerHTML = nCell.innerHTML.replace(fDopRab, "<b style='color:#CC0000;	font-size:12pt' >$&</b>");
@@ -333,12 +333,16 @@
                         if (str.match(/^".*"$/gi)) {
                             var nLogin = str.replace(/"/g, "");
                             var ssString = '';
+                            var autString = '';
                             switch (zReg) {
                                 case 'krd':
                                     zReg = ['86763', '1000000682', '1000000841'];
                                     break;
                                 case 'ast':
                                     zReg = ['86623', '1000000921', '1000000941'];
+                                    //https://onymaweb.south.rt.ru/onyma/main/ap_show.htms?link=86623&login=3copnfeopf
+                                    //https://onymaweb.south.rt.ru/onyma/main/ap_show.htms?link=1000000921&login=3copnfeopf
+                                    //https://onymaweb.south.rt.ru/onyma/main/ap_show.htms?link=1000000941&login=3copnfeopf
                                     break;
                                 case 'klm':
                                     zReg = ['87543', '2830'];
@@ -374,9 +378,10 @@
                             }
                             if (typeof zReg != 'string') {
                                 for (let ir = 0; ir < zReg.length; ir++) {
-                                    ssString += "window.open('https://onymaweb.south.rt.ru/onyma/main/ap_logs.htms?pg=0&__rpp=0&menuitem=245&spg=210&link=" + zReg[ir] + "&login=" + nLogin + "&da1=12.05.21+00:00','_blank');";
+                                    autString+="window.open('https://onymaweb.south.rt.ru/onyma/main/ap_show.htms?link=" + zReg[ir] + "&login=" + nLogin + "','_blank');";
+                                    ssString +="window.open('https://onymaweb.south.rt.ru/onyma/main/ap_logs.htms?pg=0&__rpp=0&menuitem=245&spg=210&link=" + zReg[ir] + "&login=" + nLogin + "','_blank');";
                                 }
-                                ssString = "<a href='#' onclick=" + ssString + ">" + nLogin + "</a>&nbsp;";
+                                ssString = "<a href='#' onclick=" + autString+ssString + ">" + nLogin + "</a>&nbsp;";
                             } else {
                                 ssString = nLogin + " ";
                             }
@@ -417,7 +422,7 @@
                     text = /(mac:)*([a-fA-F\d]{2}[\.\-\:_]{1}){5}[a-fA-F\d]{2}|(mac:)*([a-fA-F\d]{4}[\.\-:_]{1}){2}[a-fA-F\d]{4}/gi;
                     break;
                 case 2:
-                    text = /\"[a-zA-Z\d]{8,}\"/gi;
+                    text = /\"[a-zA-Z\d_]{8,}\"/gi;
                     break;
                 case 3: ///(^|[^a-z]) &gt; ===   >
                     text = /(^|[^a-z]|[^>])(23(A(FIP|ZOV)|CHER|GR(IG|KL)|ILSK|LVOV|MIHA|NOVO|S(EV|MOL|TAV)|UBIN)|A(DY*G*|ST)|(AFIP|CHER|GRKL|SEV)23|DAG*|ING*|K|K(LM*|BR*|R*DA*|C(R|H))|NZR|R(ND|o|OS|ST|H)|S(T(A|V)|SI|V*O)|V[LG]G)[\-_][a-zA-Z\d\-\._]+[\/\d\b\s\|a-z:;#_|&gt;]*(\/)*\d+\/\d+(\/\d+)*/gi;
