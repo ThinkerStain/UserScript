@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Light4
 // @namespace    http://tampermonkey.net/
-// @version      0.094
+// @version      0.0941
 // @description  Упрощаем работу глазам
 // @author       Yuriy.Klimovich@south.rt.ru
 // @include        *argus.south.rt.ru/argus*
@@ -268,8 +268,9 @@
         let fIp = /(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)/g
         let fIgmpIp = /igmp:\/\/((2(5[0-5]|[0-4]\d)|1*\d{2}|\d)\.){3}(2(5[0-5]|[0-4]\d)|1*\d{2}|\d):\d+/g
         let fNLS = /\s+4\d{11}\s*/g; //находим хостнейм во вторичке
-        let fDopRab = /(ДОПРАБ|ВЫЕЗД|СПД|ПРМОН|CRM)\-\d{7,}/g;
+        let fDopRab = /(ДОПРАБ|ВЫЕЗД|СПД|ПРМОН|CRM)\-\d{7,}/gi;
         let fErrorS = /,\s+\d+\s+CRC,|CRC.*:.*\d+,|RX.*dBm|snr.*\|\s[\d\.]+/gi;
+        let fBras =/[a-z]+\-bras\d+/gi;
         let fUp = /\Wup\b/gi;
         let fDown = /\Wdown\b/gi;
         let fTags = /<.*>|\n|Редактировать/gi;
@@ -291,8 +292,9 @@
             nCell.innerHTML = nCell.innerHTML.replace(/[\/\-]ethernet/gi, " Ethernet"); // нужно ждя того, что бы нt искалхостнеймы "бла-блабла-хостнейм-ethernet"
           //  nCell.innerHTML = nCell.innerHTML.replace(fIp, "<b class='f_ip' style='color:#1100FF;	font-size:12pt' >$&</b>");
             nCell.innerHTML = nCell.innerHTML.replace(fNLS, "<b style='color:#1100FF;	font-size:12pt' >$&</b>");
-            nCell.innerHTML = nCell.innerHTML.replace(fData, "<b style='color:#1100FF;	font-size:12pt' >$&</b>");
+            //nCell.innerHTML = nCell.innerHTML.replace(fData, "<b style='color:#1100FF;	font-size:12pt' >$&</b>");
             nCell.innerHTML = nCell.innerHTML.replace(fDopRab, "<b style='color:#CC0000;	font-size:12pt' >$&</b>");
+            nCell.innerHTML = nCell.innerHTML.replace(fBras, "<b style='color:#CC0000;	font-size:12pt' >$&</b>");
             nCell.innerHTML = dopRepl(nCell.innerHTML, 1);
             nCell.innerHTML = dopRepl(nCell.innerHTML, 3);
             nCell.innerHTML = dopRepl(nCell.innerHTML, 2);
@@ -335,57 +337,54 @@
                             var ssString = '';
                             var autString = '';
                             switch (zReg) {
-                                case 'krd':
-                                    zReg = ['86763', '1000000682', '1000000841'];
-                                    break;
-                                case 'ast':
-                                    zReg = ['86623', '1000000921', '1000000941'];
-                                    //https://onymaweb.south.rt.ru/onyma/main/ap_show.htms?link=86623&login=3copnfeopf
-                                    //https://onymaweb.south.rt.ru/onyma/main/ap_show.htms?link=1000000921&login=3copnfeopf
-                                    //https://onymaweb.south.rt.ru/onyma/main/ap_show.htms?link=1000000941&login=3copnfeopf
-                                    break;
-                                case 'klm':
-                                    zReg = ['87543', '2830'];
-                                    break;
-                                case 'rst':
-                                    zReg = ['2989', '97723', '1000000601', '1000000661'];
-                                    break;
-                                case 'vlg':
-                                    zReg = ["85363", "1000000902", "1000000901"];
-                                    break;
-                                case 'kch':
-                                    zReg = ['2990', '3147', '1000000781', '1000000801'];
-                                    break;
-                                case 'dag':
-                                    zReg = ['74663', '87083'];
-                                    break;
-                                case 'kbr':
-                                    zReg = ['2866', '87503'];
-                                    break;
-                                case 'svo':
-                                    zReg = ['1000000981', '1000001121', '85443', '85423', '2990', '3147', '1000000781', '1000000801'];
-                                    break;
-                                case 'stv':
-                                    zReg = ['1000000781', '1000000801'];
-                                    break;
-                                case 'ing':
-                                    zReg = ['2990', '3147', '1000000781', '1000000801'];
+                                 case 'krd':
+                                    zReg = [86763, 1000000682, 1000000841];
                                     break;
                                 case 'adg':
-                                    zReg = ['86763', '97623', '1000000682', '1000000841', '97703'];
+                                    zReg = [86763, 1000000682, 1000000841];
                                     break;
-                                    //default: zReg = nLogin; break;
+                                case 'ast':
+                                    zReg = [86623, 1000000921, 1000000941, 1000000781, 1000000801];
+                                    break;
+                                case 'klm':
+                                    zReg = [1000001341,1000001342];
+                                    break;
+                                case 'rst':
+                                    zReg = [2989, 97723, 1000000601, 1000000661];
+                                    break;
+                                case 'vlg':
+                                    zReg = [85363, 1000000902, 1000000901];
+                                    break;
+                                case 'kch':
+                                    zReg = [1000000781, 1000000801];
+                                    break;
+                                case 'dag':
+                                    zReg = [74663, 1000001421, 1000001401];
+                                    break;
+                                case 'kbr':
+                                    zReg = [1000001361,1000001381];
+                                    break;
+                                case 'svo':
+                                    zReg = [1000000981,1000001121, 85443, 85423, 1000000781, 1000000801];
+                                    break;
+                                case 'stv':
+                                    zReg = [1000000781, 1000000801];
+                                    break;
+                                case 'ing':
+                                    zReg = [1000000781, 1000000801];
+                                    break;
                             }
                             if (typeof zReg != 'string') {
                                 for (let ir = 0; ir < zReg.length; ir++) {
                                     autString+="window.open('https://onymaweb.south.rt.ru/onyma/main/ap_show.htms?link=" + zReg[ir] + "&login=" + nLogin + "','_blank');";
                                     ssString +="window.open('https://onymaweb.south.rt.ru/onyma/main/ap_logs.htms?pg=0&__rpp=0&menuitem=245&spg=210&link=" + zReg[ir] + "&login=" + nLogin + "','_blank');";
                                 }
-                                ssString = "<a href='#' onclick=" + autString+ssString + ">" + nLogin + "</a>&nbsp;";
+                                ssString = "<a href='#' onclick=" + ssString + ">" + nLogin + "</a>&nbsp;";
+                                autString = "<a href='#' onclick=" + autString+ ">AT</a>&nbsp;";
                             } else {
-                                ssString = nLogin + " ";
+                                ssString = nLogin + "&nbsp;";
                             }
-                            newStr = ssString + "<a class='f_login'  target='_blank' href='http://tr069.south.rt.ru/#/cpes/by/CPESearchOptions.cid/value/" + nLogin + "?tab=MainDiag'>TR-69</a>&nbsp;"
+                            newStr = ssString + autString+ "<a class='f_login'  target='_blank' href='http://tr069.south.rt.ru/#/cpes/by/CPESearchOptions.cid/value/" + nLogin + "?tab=MainDiag'>TR</a>&nbsp;"
                         };
                         break;
                     case 3: //ДОДЕЛАТЬ ДЛЯ ПОН /0/0/0/0 // 101091510 НЕ СВЕТИТ хостнеймы
@@ -425,7 +424,7 @@
                     text = /\"[a-zA-Z\d_]{8,}\"/gi;
                     break;
                 case 3: ///(^|[^a-z]) &gt; ===   >
-                    text = /(^|[^a-z]|[^>])(23(A(FIP|ZOV)|CHER|GR(IG|KL)|ILSK|LVOV|MIHA|NOVO|S(EV|MOL|TAV)|UBIN)|A(DY*G*|ST)|(AFIP|CHER|GRKL|SEV)23|DAG*|ING*|K|K(LM*|BR*|R*DA*|C(R|H))|NZR|R(ND|o|OS|ST|H)|S(T(A|V)|SI|V*O)|V[LG]G)[\-_][a-zA-Z\d\-\._]+[\/\d\b\s\|a-z:;#_|&gt;]*(\/)*\d+\/\d+(\/\d+)*/gi;
+                    text = /(^|[^a-z]|[^>])(23(A(FIP|ZOV)|CHER|GR(IG|KL)|ILSK|LVOV|MIHA|NOVO|S(EV|MOL|TAV)|UBIN)|A(DY*G*|ST)|(AFIP|CHER|GRKL|SEV)23|DAG*|ING*|K(LM*|BR*|R*DA*|C(R|H))|NZR|R(ND|o|OS|ST|H)|S(T(A|V)|SI|V*O)|V[LG]G)[\-_][a-zA-Z\d\-\._]+[\/\d\b\s\-\|a-z:;#_|&gt;]*(\/)*\d+\/\d+(\/\d+)*/gi;
                     break;
             }
             return s.replace(text, convert);
