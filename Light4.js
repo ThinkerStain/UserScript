@@ -267,7 +267,7 @@
         let fData = /((&nbsp;)|\s)*([0-2]*\d|3[0-1])[\.\-](0\d|1[0-2])[\.\-](202\d|2\d)((&nbsp;)|\s)*/g;
         let fIp = /(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)/g
         let fIgmpIp = /igmp:\/\/((2(5[0-5]|[0-4]\d)|1*\d{2}|\d)\.){3}(2(5[0-5]|[0-4]\d)|1*\d{2}|\d):\d+/g
-        let fNLS = /4\d{11}\s*/g; //находим хостнейм во вторичке
+        let fNLS = /4(34|61|23|09|15)\d{9}\s*/g; //находим хостнейм во вторичке
         let fDopRab = /(ДОПРАБ|ВЫЕЗД|СПД|ПРМОН|CRM)\-\d{7,}/gi;
         let fErrorS = /,\s+\d+\s+CRC,|CRC.*:.*\d+,|RX.*dBm|snr.*\|\s[\d\.]+/gi;
         let fBras =/[a-z]+\-bras\d+/gi;
@@ -388,8 +388,8 @@
                         };
                         break;
                     case 3: //ДОДЕЛАТЬ ДЛЯ ПОН /0/0/0/0 // 101091510 НЕ СВЕТИТ хостнеймы
-                        if (str.match(/[a-z\d\.\-_]+[^\b^\s^\/^:^#>]/gi)) {
-                            var nHost = str.match(/[a-z\d\.\-_]+[^\b^\s^\/^:^#&]/gi)[0];
+                        if (str.match(/[a-z\d\.\-_]+[^\b^\s^\/^:^#]/gi)) {
+                            var nHost = str.match(/[a-z\d\.\-_]+[^\b^\s^\/^:^#^\)^\(&]/gi)[0];
                             str = str.replace(nHost, "");
                             var nReg = nHost.match(/[a-z\d]{3}/gi)[0];
                             zReg = nReg.toLowerCase();
@@ -424,7 +424,7 @@
                     text = /\"[a-zA-Z\d_]{8,}\"/gi;
                     break;
                 case 3: ///(^|[^a-z]) &gt; ===   >
-                    text = /(^|[^a-z]|[^>])(23(A(FIP|ZOV)|CHER|GR(IG|KL)|ILSK|LVOV|MIHA|NOVO|S(EV|MOL|TAV)|UBIN)|A(DY*G*|ST)|(AFIP|CHER|GRKL|SEV)23|DAG*|ING*|K(LM*|BR*|R*DA*|C(R|H))|NZR|R(ND|o|OS|ST|H)|S(T(A|V)|SI|V*O)|V[LG]G)[\-_][a-zA-Z\d\-\._]+[\/\d\b\s\-\|a-z:;#_|&gt;]*(\/)*\d+\/\d+(\/\d+)*/gi;
+                    text = /(^|[^a-z]|[^>])(23(A(FIP|ZOV)|CHER|GR(IG|KL)|ILSK|LVOV|MIHA|NOVO|S(EV|MOL|TAV)|UBIN)|A(DY*G*|ST)|(AFIP|CHER|GRKL|SEV)23|DAG*|ING*|K(LM*|BR*|R*DA*|C(R|H))|NZR|R(ND|o|OS|ST|H)|S(T(A|V)|SI|V*O)|V[LG]G)[\-_][a-zA-Z\d\-\._]+[\/\d\b\s\-\|a-z:;#_\(\)|&gt;]*(\/)*\d+\/\d+(\/\d+)*/gi;
                     break;
             }
             return s.replace(text, convert);
