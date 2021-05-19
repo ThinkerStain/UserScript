@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Light4
 // @namespace    http://tampermonkey.net/
-// @version      0.0941
+// @version      0.09411
 // @description  Упрощаем работу глазам
 // @author       Yuriy.Klimovich@south.rt.ru
 // @include        *argus.south.rt.ru/argus*
@@ -267,7 +267,7 @@
         let fData = /((&nbsp;)|\s)*([0-2]*\d|3[0-1])[\.\-](0\d|1[0-2])[\.\-](202\d|2\d)((&nbsp;)|\s)*/g;
         let fIp = /(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)/g
         let fIgmpIp = /igmp:\/\/((2(5[0-5]|[0-4]\d)|1*\d{2}|\d)\.){3}(2(5[0-5]|[0-4]\d)|1*\d{2}|\d):\d+/g
-        let fNLS = /\s+4\d{11}\s*/g; //находим хостнейм во вторичке
+        let fNLS = /4\d{11}\s*/g; //находим хостнейм во вторичке
         let fDopRab = /(ДОПРАБ|ВЫЕЗД|СПД|ПРМОН|CRM)\-\d{7,}/gi;
         let fErrorS = /,\s+\d+\s+CRC,|CRC.*:.*\d+,|RX.*dBm|snr.*\|\s[\d\.]+/gi;
         let fBras =/[a-z]+\-bras\d+/gi;
@@ -291,7 +291,7 @@
             }
             nCell.innerHTML = nCell.innerHTML.replace(/[\/\-]ethernet/gi, " Ethernet"); // нужно ждя того, что бы нt искалхостнеймы "бла-блабла-хостнейм-ethernet"
           //  nCell.innerHTML = nCell.innerHTML.replace(fIp, "<b class='f_ip' style='color:#1100FF;	font-size:12pt' >$&</b>");
-            nCell.innerHTML = nCell.innerHTML.replace(fNLS, "<b style='color:#1100FF;	font-size:12pt' >$&</b>");
+            nCell.innerHTML = nCell.innerHTML.replace(fNLS, "<a href='https://onymaweb.south.rt.ru/onyma/main/dogsearch.htms?menuitem=1851&_cc=1&__rpp=0&pg=0&addattrv1=$&', target='_blank'>$&</a>");
             //nCell.innerHTML = nCell.innerHTML.replace(fData, "<b style='color:#1100FF;	font-size:12pt' >$&</b>");
             nCell.innerHTML = nCell.innerHTML.replace(fDopRab, "<b style='color:#CC0000;	font-size:12pt' >$&</b>");
             nCell.innerHTML = nCell.innerHTML.replace(fBras, "<b style='color:#CC0000;	font-size:12pt' >$&</b>");
@@ -355,7 +355,7 @@
                                 case 'vlg':
                                     zReg = [85363, 1000000902, 1000000901];
                                     break;
-                                case 'kch':
+                                case 'kcr':
                                     zReg = [1000000781, 1000000801];
                                     break;
                                 case 'dag':
