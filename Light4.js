@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Light4
 // @namespace    http://tampermonkey.net/
-// @version      0.09412
+// @version      0.0942
 // @description  Упрощаем работу глазам
 // @author       Yuriy.Klimovich@south.rt.ru
 // @include        *argus.south.rt.ru/argus*
@@ -54,7 +54,7 @@
                     fGP[i].cells[cLngth].after(newE);
                 }
                 //RST-CLT-K-Marksa65-PON1-4000,Slot=1,Port=4,ONT-id=11
-                //
+                
                 let regH = /((23(A(FIP|ZOV)|CHER|GR(IG|KL)|ILSK|LVOV|MIHA|NOVO|S(EV|MOL|TAV)|UBIN)|A(DY*G*|ST)|(AFIP|CHER|GRKL|SEV)23|DAG*|ING*|K(LM*|BR*|R*DA*|C(R|H))|NZR|R(ND|o|OS|ST|H)|S(T(A|V)|SI|V*O)|V[LG]G)[\-_][a-zA-Z\d\-\._]+[\/\d\b\s\-\|a-z:;#_\(\)=|&gt;]*((\/)*\d+\/\d+(\/\d+)*|((atm.*|\/)\d+:\d+\.\d+)|(.*,.*[a-z\-]=\d+))|[a-f\d\.\-:]{10,}:remote-id)/gi
                 let shlak = /.*(005C)+.*/gi
                 let fHname = String(fGP[i].cells[cLngth].innerText).match(regH);
@@ -68,7 +68,7 @@
                     newE2.innerHTML = 'H';
                     fGP[i].cells[cLngth].after(newE2);
                 }
-                //a493.4c24.3140:remote-id   реализовать поиск по маку
+
                 let fShlak = String(fGP[i].cells[2].innerText).match(shlak);
                 if (fShlak != null) {fGP[i].cells[2].innerText="Нечитаемый А-№"} // удаляем Шлак из аномера, обычно в волгограде более 40 символов аномер
                 let fAname = String(fGP[i].cells[2].innerText).match(regH);
@@ -132,7 +132,7 @@
             }
         }
 
-        if (document.location.href.match(/.*clsrv.htms.*/gi)) {
+        if (document.location.href.match(/.*clsrv.htms.*/gi)) { /// СДЕЛАТЬ IPOE
             var q0 = document.querySelector('a[title="\\[ЮТК\\] Сервис IPTV"]').parentNode.querySelector('i'); //Ссылка в ониме по Логину ТВ приставки на ТВплатформу
             if (q0 != undefined) {
                 var nStr = q0.innerHTML.replace(/\D+/gi, "");
@@ -267,7 +267,6 @@
         }, false);
         newElem2.innerHTML = '<b style="color:#009900">&nbsp;ВВЕРХ</b>';
         document.getElementById('history_tabs-history_form-new_comment').parentNode.before(newElem2);
-        let fPersNum = "467181"; //Поиск своих комментов
         let fTV = ['^f8:a0:97', '^00:1a:79', '^ec:4c:4d', '^0c:56:5c', '^1c:bb:a8', '^00:02:9b', '^f4:0e:83', '^00:07:67', '^d8:af:81', '^e4:27', '^bc:64', '^5c:b0', '^7c:6d', '^14:2e', '^60:ce'];
         let fTime = /((&nbsp;)|\s)([0-1]*\d|2[0-3]):[0-5]\d((&nbsp;)|(\s|\b))*/g;
         let fData = /((&nbsp;)|\s)*([0-2]*\d|3[0-1])[\.\-](0\d|1[0-2])[\.\-](202\d|2\d)((&nbsp;)|\s)*/g;
@@ -296,9 +295,9 @@
                 }
             }
             nCell.innerHTML = nCell.innerHTML.replace(/[\/\-]ethernet/gi, " Ethernet"); // нужно ждя того, что бы нt искалхостнеймы "бла-блабла-хостнейм-ethernet"
-          //  nCell.innerHTML = nCell.innerHTML.replace(fIp, "<b class='f_ip' style='color:#1100FF;	font-size:12pt' >$&</b>");
+          //nCell.innerHTML = nCell.innerHTML.replace(fIp, "<b class='f_ip' style='color:#1100FF;	font-size:12pt' >$&</b>");
             nCell.innerHTML = nCell.innerHTML.replace(fNLS, "<a href='https://onymaweb.south.rt.ru/onyma/main/dogsearch.htms?menuitem=1851&_cc=1&__rpp=0&pg=0&addattrv1=$&', target='_blank'>$&</a>");
-            //nCell.innerHTML = nCell.innerHTML.replace(fData, "<b style='color:#1100FF;	font-size:12pt' >$&</b>");
+          //nCell.innerHTML = nCell.innerHTML.replace(fData, "<b style='color:#1100FF;	font-size:12pt' >$&</b>");
             nCell.innerHTML = nCell.innerHTML.replace(fDopRab, "<b style='color:#CC0000;	font-size:12pt' >$&</b>");
             nCell.innerHTML = nCell.innerHTML.replace(fBras, "<b style='color:#CC0000;	font-size:12pt' >$&</b>");
             nCell.innerHTML = dopRepl(nCell.innerHTML, 1);
@@ -338,8 +337,9 @@
                         newStr = sM + "<a href='#' onclick=" + opnWin + ">" + bezM + "</a> " + Raw + " " + SmartT;
                         break;
                     case 2: //Тут ищем и обрабатываем логины абонента
-                        if (str.match(/^".*"$/gi)) {
+                        if (str.match(/^".*"$|Default(	)+[a-z\d_]+/gi)) {
                             var nLogin = str.replace(/"/g, "");
+                             nLogin = nLogin.replace(/Default(	)+/g, "");
                             var ssString = '';
                             var autString = '';
                             switch (zReg) {
@@ -427,7 +427,7 @@
                     text = /(mac:)*([a-fA-F\d]{2}[\.\-\:_]{1}){5}[a-fA-F\d]{2}|(mac:)*([a-fA-F\d]{4}[\.\-:_]{1}){2}[a-fA-F\d]{4}/gi;
                     break;
                 case 2:
-                    text = /\"[a-zA-Z\d_]{8,}\"/gi;
+                    text = /\"[a-zA-Z\d_]{8,}\"|Default(	)+[a-z\d_]+/gi;
                     break;
                 case 3: ///(^|[^a-z]) &gt; ===   >
                     text = /(^|[^a-z]|[^>])(23(A(FIP|ZOV)|CHER|GR(IG|KL)|ILSK|LVOV|MIHA|NOVO|S(EV|MOL|TAV)|UBIN)|A(DY*G*|ST)|(AFIP|CHER|GRKL|SEV)23|DAG*|ING*|K(LM*|BR*|R*DA*|C(R|H))|NZR|R(ND|o|OS|ST|H)|S(T(A|V)|SI|V*O)|V[LG]G)[\-_][a-zA-Z\d\-\._]+[\/\d\b\s\-\|a-z:;#_\(\)=|&gt;]*(\/)*\d+\/\d+(\/\d+)*/gi;
