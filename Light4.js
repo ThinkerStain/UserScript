@@ -54,7 +54,7 @@
                     fGP[i].cells[cLngth].after(newE);
                 }
                 //RST-CLT-K-Marksa65-PON1-4000,Slot=1,Port=4,ONT-id=11
-                
+
                 let regH = /((23(A(FIP|ZOV)|CHER|GR(IG|KL)|ILSK|LVOV|MIHA|NOVO|S(EV|MOL|TAV)|UBIN)|A(DY*G*|ST)|(AFIP|CHER|GRKL|SEV)23|DAG*|ING*|K(LM*|BR*|R*DA*|C(R|H))|NZR|R(ND|o|OS|ST|H)|S(T(A|V)|SI|V*O)|V[LG]G)[\-_][a-zA-Z\d\-\._]+[\/\d\b\s\-\|a-z:;#_\(\)=|&gt;]*((\/)*\d+\/\d+(\/\d+)*|((atm.*|\/)\d+:\d+\.\d+)|(.*,.*[a-z\-]=\d+))|[a-f\d\.\-:]{10,}:remote-id)/gi
                 let shlak = /.*(005C)+.*/gi
                 let fHname = String(fGP[i].cells[cLngth].innerText).match(regH);
@@ -274,7 +274,7 @@
         let fIgmpIp = /igmp:\/\/((2(5[0-5]|[0-4]\d)|1*\d{2}|\d)\.){3}(2(5[0-5]|[0-4]\d)|1*\d{2}|\d):\d+/g
         let fNLS = /4(34|61|23|09|15)\d{9}\s*/g; //находим хостнейм во вторичке
         let fDopRab = /(ДОПРАБ|ВЫЕЗД|СПД|ПРМОН|CRM)\-\d{7,}/gi;
-        let fErrorS = /,\s+\d+\s+CRC,|CRC.*:.*\d+,|RX.*dBm|snr.*\|\s[\d\.]+/gi;
+        let fErrorS = /,\s+\d+\s+CRC,|CRC.*:.*\d+,|(OLT)*RX.*dBm.*(\-*\d+\.\d+)|snr.*\|\s[\d\.]+/gi;
         let fBras =/[a-z]+\-bras\d+/gi;
         let fUp = /\Wup\b/gi;
         let fDown = /\Wdown\b/gi;
@@ -350,7 +350,7 @@
                                     zReg = [86763, 1000000682, 1000000841];
                                     break;
                                 case 'ast':
-                                    zReg = [86623, 1000000921, 1000000941, 1000000781, 1000000801];
+                                    zReg = [1000000921, 1000000941, 1000000781, 1000000801];
                                     break;
                                 case 'klm':
                                     zReg = [1000001341,1000001342];
