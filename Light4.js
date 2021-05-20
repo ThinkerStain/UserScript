@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Light4
 // @namespace    http://tampermonkey.net/
-// @version      0.09411
+// @version      0.09412
 // @description  Упрощаем работу глазам
 // @author       Yuriy.Klimovich@south.rt.ru
 // @include        *argus.south.rt.ru/argus*
@@ -53,7 +53,10 @@
                     newE.innerHTML = 'M';
                     fGP[i].cells[cLngth].after(newE);
                 }
-                let regH = /(23(A(FIP|ZOV)|CHER|GR(IG|KL)|ILSK|LVOV|MIHA|NOVO|S(EV|MOL|TAV)|UBIN)|A(DY*G*|ST)|(AFIP|CHER|GRKL|SEV)23|DAG*|ING*|K(LM*|BR*|R*DA*|C(R|H))|NZR|R(ND|o|OS|ST|H)|S(T(A|V)|SI|V*O)|V[LG]G)[\-_][a-zA-Z\d\-\._]+[\/\d\b\s\|a-z:;#_>]*(\/)*\d+\/\d+(\/\d+)*/gi
+                //RST-CLT-K-Marksa65-PON1-4000,Slot=1,Port=4,ONT-id=11
+                //
+                let regH = /((23(A(FIP|ZOV)|CHER|GR(IG|KL)|ILSK|LVOV|MIHA|NOVO|S(EV|MOL|TAV)|UBIN)|A(DY*G*|ST)|(AFIP|CHER|GRKL|SEV)23|DAG*|ING*|K(LM*|BR*|R*DA*|C(R|H))|NZR|R(ND|o|OS|ST|H)|S(T(A|V)|SI|V*O)|V[LG]G)[\-_][a-zA-Z\d\-\._]+[\/\d\b\s\-\|a-z:;#_\(\)=|&gt;]*((\/)*\d+\/\d+(\/\d+)*|((atm.*|\/)\d+:\d+\.\d+)|(.*,.*[a-z\-]=\d+))|[a-f\d\.\-:]{10,}:remote-id)/gi
+                let shlak = /.*(005C)+.*/gi
                 let fHname = String(fGP[i].cells[cLngth].innerText).match(regH);
                 if (fHname != null) {
                     let newE2 = document.createElement('a');
@@ -65,6 +68,9 @@
                     newE2.innerHTML = 'H';
                     fGP[i].cells[cLngth].after(newE2);
                 }
+                //a493.4c24.3140:remote-id   реализовать поиск по маку
+                let fShlak = String(fGP[i].cells[2].innerText).match(shlak);
+                if (fShlak != null) {fGP[i].cells[2].innerText="Нечитаемый А-№"} // удаляем Шлак из аномера, обычно в волгограде более 40 символов аномер
                 let fAname = String(fGP[i].cells[2].innerText).match(regH);
                 if (fAname != null) {
                     let newE2 = document.createElement('a');
@@ -116,7 +122,7 @@
                     e3[i].cells[2].style.background = 'rgb(255 255 153)';
                 }
                 if (e3[i].innerText.match(/active/gi)) {
-                    if (e3[i].cells[0].innerText.match(/^(04|863\d{0,7}\D|i0|et|rt|rs|dsl[^_]|ssg|ipo|pppoe)/gi)) {
+                    if (e3[i].cells[0].innerText.match(/^(04|863\d{0,7}\D|i0|et|rt|rs|dsl[^_]|ssg|ipo|pppoe|dkd)/gi)) {
                         e3[i].cells[0].style.background = 'rgb(193 245 192)';
                         e3[i].cells[1].style.background = 'rgb(193 245 192)';
                         e3[i].cells[2].style.background = 'rgb(193 245 192)';
@@ -389,7 +395,7 @@
                         break;
                     case 3: //ДОДЕЛАТЬ ДЛЯ ПОН /0/0/0/0 // 101091510 НЕ СВЕТИТ хостнеймы
                         if (str.match(/[a-z\d\.\-_]+[^\b^\s^\/^:^#]/gi)) {
-                            var nHost = str.match(/[a-z\d\.\-_]+[^\b^\s^\/^:^#^\)^\(&]/gi)[0];
+                            var nHost = str.match(/[a-z\d\.\-_]+[^\b^\s^\/^:^#^\)^\(^\|&]/gi)[0];//находим четкий хостнейм
                             str = str.replace(nHost, "");
                             var nReg = nHost.match(/[a-z\d]{3}/gi)[0];
                             zReg = nReg.toLowerCase();
@@ -424,7 +430,7 @@
                     text = /\"[a-zA-Z\d_]{8,}\"/gi;
                     break;
                 case 3: ///(^|[^a-z]) &gt; ===   >
-                    text = /(^|[^a-z]|[^>])(23(A(FIP|ZOV)|CHER|GR(IG|KL)|ILSK|LVOV|MIHA|NOVO|S(EV|MOL|TAV)|UBIN)|A(DY*G*|ST)|(AFIP|CHER|GRKL|SEV)23|DAG*|ING*|K(LM*|BR*|R*DA*|C(R|H))|NZR|R(ND|o|OS|ST|H)|S(T(A|V)|SI|V*O)|V[LG]G)[\-_][a-zA-Z\d\-\._]+[\/\d\b\s\-\|a-z:;#_\(\)|&gt;]*(\/)*\d+\/\d+(\/\d+)*/gi;
+                    text = /(^|[^a-z]|[^>])(23(A(FIP|ZOV)|CHER|GR(IG|KL)|ILSK|LVOV|MIHA|NOVO|S(EV|MOL|TAV)|UBIN)|A(DY*G*|ST)|(AFIP|CHER|GRKL|SEV)23|DAG*|ING*|K(LM*|BR*|R*DA*|C(R|H))|NZR|R(ND|o|OS|ST|H)|S(T(A|V)|SI|V*O)|V[LG]G)[\-_][a-zA-Z\d\-\._]+[\/\d\b\s\-\|a-z:;#_\(\)=|&gt;]*(\/)*\d+\/\d+(\/\d+)*/gi;
                     break;
             }
             return s.replace(text, convert);
