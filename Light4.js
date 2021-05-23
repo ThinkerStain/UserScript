@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Light4
 // @namespace    http://tampermonkey.net/
-// @version      0.0942
+// @version      0.0943
 // @description  Упрощаем работу глазам
 // @author       Yuriy.Klimovich@south.rt.ru
 // @include        *argus.south.rt.ru/argus*
@@ -167,77 +167,33 @@
     if (document.location.href.match(/.*argus.south.rt.ru\/.*/gi)) {
         var zReg = ""; //Поиск региона
 
-        let mmu = document.getElementById('main_menu_unit');
-        let fdu = mmu.querySelector('form > div > ul');
-        newElem = document.createElement('li');
-        newElem.className = 'ui-widget ui-menuitem ui-corner-all ui-menu-parent';
-        newElem.setAttribute("aria-haspopup", "true");
-        newElem.id = 'pp1';
-        fdu.append(newElem);
 
-        let newElem2 = document.createElement('a');
-        newElem2.className = 'ui-menuitem-link ui-submenu-link ui-corner-all';
-        newElem2.setAttribute("href", "https://mrf-pl.south.rt.ru/");
-        newElem2.setAttribute("target", "_blank");
-        newElem2.innerHTML = 'In';
-        newElem2.title = 'Initi';
-        document.getElementById('pp1').append(newElem2);
 
-        newElem2 = document.createElement('a');
-        newElem2.className = 'ui-menuitem-link ui-submenu-link ui-corner-all';
-        newElem2.setAttribute("href", "http://ctpdiag.south.rt.ru/");
-        newElem2.setAttribute("target", "_blank");
-        newElem2.text = '2L';
-        newElem2.title = '2LTP';
-        document.getElementById('pp1').append(newElem2);
+////Выпадающее меню с сылками
+var aIs = [];
+aIs[0] = '<option value="http://bz.south.rt.ru/stv/light4/">Полезное</option>';
+aIs[1] = '<option value="https://mrf-pl.south.rt.ru/">Initi</option>';
+aIs[2] = '<option value="http://ctpdiag.south.rt.ru/">2LTP</option>';
+aIs[3] = '<option value="http://tr069.south.rt.ru/#/search">TR-69</option>';
+aIs[4] = '<option value="https://onymaweb.south.rt.ru/onyma/main/dogsearch.htms?menuitem=1851&_cc=1&__rpp=0&pg=0">Onyma</option>';
+aIs[5] = '<option value="https://uniapp.south.rt.ru/">UniApp</option>';
+aIs[6] = '<option value="http://10.144.35.30:8081/smarttube/master/adminui4/app/login">ТВ-платформа</option>';
+aIs[7] = '<option value="http://10.63.1.2:4000/rawlog">Rawlog</option>';
+aIs[8] = '<option value="https://onymaweb.south.rt.ru/onyma/main/ap_mon.htms?menuitem=1921&real_mi=1921&_cc=1&__rpp=0">Сброс сессий</option>';
+let mmu = document.getElementById('mmf-main_menu_bar');
+let fdu = mmu.querySelector('ul');
+newElem = document.createElement('select');
+newElem.setAttribute("class",'minimenu');
+for (let i = 0; i < aIs.length; i++) {newElem.innerHTML+=aIs[i]}
+fdu.append(newElem);
 
-        newElem2 = document.createElement('a');
-        newElem2.className = 'ui-menuitem-link ui-submenu-link ui-corner-all';
-        newElem2.setAttribute("href", "http://tr069.south.rt.ru/#/search");
-        newElem2.setAttribute("target", "_blank");
-        newElem2.innerHTML = 'TR';
-        newElem2.title = '2LTP';
-        document.getElementById('pp1').append(newElem2);
+$(document).ready(function(){
+	$('.minimenu').change(function(){
+		window.open($(this).val(), '_blank')
+	});
+});
+////Выпадающее меню с сылками
 
-        newElem2 = document.createElement('a');
-        newElem2.className = 'ui-menuitem-link ui-submenu-link ui-corner-all';
-        newElem2.setAttribute("href", "https://onymaweb.south.rt.ru/onyma/main/dogsearch.htms?menuitem=1851&_cc=1&__rpp=0&pg=0");
-        newElem2.setAttribute("target", "_blank");
-        newElem2.innerHTML = 'On';
-        newElem2.title = 'Onyma';
-        document.getElementById('pp1').append(newElem2);
-
-        newElem2 = document.createElement('a');
-        newElem2.className = 'ui-menuitem-link ui-submenu-link ui-corner-all';
-        newElem2.setAttribute("href", "https://uniapp.south.rt.ru/");
-        newElem2.setAttribute("target", "_blank");
-        newElem2.innerHTML = 'Un';
-        newElem2.title = 'UNIAPP';
-        document.getElementById('pp1').append(newElem2);
-
-        newElem2 = document.createElement('a');
-        newElem2.className = 'ui-menuitem-link ui-submenu-link ui-corner-all';
-        newElem2.setAttribute("href", "http://10.144.35.30:8081/smarttube/master/adminui4/app/login");
-        newElem2.setAttribute("target", "_blank");
-        newElem2.innerHTML = 'St';
-        newElem2.title = 'ТВ-платформа';
-        document.getElementById('pp1').append(newElem2);
-
-        newElem2 = document.createElement('a');
-        newElem2.className = 'ui-menuitem-link ui-submenu-link ui-corner-all';
-        newElem2.setAttribute("href", "http://10.63.1.2:4000/rawlog");
-        newElem2.setAttribute("target", "_blank");
-        newElem2.text = 'Ra';
-        newElem2.title = 'Rawlog';
-        document.getElementById('pp1').append(newElem2);
-
-        newElem2 = document.createElement('a');
-        newElem2.className = 'ui-menuitem-link ui-submenu-link ui-corner-all';
-        newElem2.setAttribute("href", "https://onymaweb.south.rt.ru/onyma/main/ap_mon.htms?menuitem=1921&real_mi=1921&_cc=1&__rpp=0");
-        newElem2.setAttribute("target", "_blank");
-        newElem2.text = 'Ao';
-        newElem2.title = 'Авторизации';
-        document.getElementById('pp1').append(newElem2);
     }
     if (document.location.href.match(/.*taskListView.xhtml.*/gi)) { /// Поиск кабельного ТВ
         let rre2 = document.getElementById('tbl_frm').querySelectorAll('table')[1].rows;
@@ -251,7 +207,10 @@
     }
 
     if (document.location.href.match(/.*incidentView.xhtml.*/gi)) {
-        let allForms = document.getElementById('history_tabs-history_form-add_comment');
+
+
+var target = document.getElementById('signal_process_dialog');
+     let allForms = document.getElementById('history_tabs-history_form-add_comment');
         allForms.setAttribute("onclick", "window.location.reload()");
         let allForms2 = document.querySelectorAll("li[class='ui-state-default ui-corner-top'], li[class='ui-state-default ui-tabs-selected ui-state-active ui-corner-top']");
         let scrolD = document.querySelector(".ui-datatable-scrollable-body");
@@ -394,6 +353,7 @@
                         };
                         break;
                     case 3: //ДОДЕЛАТЬ ДЛЯ ПОН /0/0/0/0 // 101091510 НЕ СВЕТИТ хостнеймы
+
                         if (str.match(/[a-z\d\.\-_]+[^\b^\s^\/^:^#]/gi)) {
                             var nHost = str.match(/[a-z\d\.\-_]+[^\b^\s^\/^:^#^\)^\(^\|&]/gi)[0];//находим четкий хостнейм
                             str = str.replace(nHost, "");
@@ -411,11 +371,14 @@
                                 }
                             }
                             nPorts = "/" + nPorts[0] + "/" + nPorts[1] + "/" + nPorts[2];
+                            if (nHost!=null && zReg!=null && nPorts!=null ){
                             newStr = "<a class='f_host' href='http://ctpdiag.south.rt.ru/?a=" + nHost + nPorts + "&region=" + nReg + "' target='_blank' title='" + nPorts0 + "'>" + nHost + nPorts + "</a>";
-                        } else {
-                            var nPorts2 = str.match(/(\/)*(\d+\/){1,2}\d+$/gi)[0];
-                            newStr = "<b style='color:#003300;	font-size:12pt;'>" + nPorts2 + "</b>";
+                            }
                         }
+                    //    else {
+                    //        var nPorts2 = str.match(/(\/)*(\d+\/){1,2}\d+$/gi)[0];
+                    //        newStr = "<b style='color:#003300;	font-size:12pt;'>" + nPorts2 + "</b>";
+                     //   }
                         break;
                 }
                 return newStr;
@@ -430,7 +393,7 @@
                     text = /\"[a-zA-Z\d_]{8,}\"|Default(	)+[a-z\d_]+/gi;
                     break;
                 case 3: ///(^|[^a-z]) &gt; ===   >
-                    text = /(^|[^a-z]|[^>])(23(A(FIP|ZOV)|CHER|GR(IG|KL)|ILSK|LVOV|MIHA|NOVO|S(EV|MOL|TAV)|UBIN)|A(DY*G*|ST)|(AFIP|CHER|GRKL|SEV)23|DAG*|ING*|K(LM*|BR*|R*DA*|C(R|H))|NZR|R(ND|o|OS|ST|H)|S(T(A|V)|SI|V*O)|V[LG]G)[\-_][a-zA-Z\d\-\._]+[\/\d\b\s\-\|a-z:;#_\(\)=|&gt;]*(\/)*\d+\/\d+(\/\d+)*/gi;
+                    text = /(^|[^a-z]|[^>])(23(A(FIP|ZOV)|CHER|GR(IG|KL)|ILSK|LVOV|MIHA|NOVO|S(EV|MOL|TAV)|UBIN)|A(DY*G*|ST)|(AFIP|CHER|GRKL|SEV)23|DAG*|ING*|K(LM*|BR*|R*DA*|C(R|H))|NZR|R(ND|o|OS|ST|H)|S(T(A|V)|SI|V*O)|V[LG]G)[\-_][a-zA-Z\d\-\._]+[\/\d\b\s\-\|a-z:;#_=|&gt;]*(\/)*\d+\/\d+(\/\d+)*/gi; // \(\)
                     break;
             }
             return s.replace(text, convert);
