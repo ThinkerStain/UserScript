@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Light4
 // @namespace    http://tampermonkey.net/
-// @version      0.0944
+// @version      0.09441
 // @description  Упрощаем работу глазам
 // @author       Yuriy.Klimovich@south.rt.ru
 // @include        *argus.south.rt.ru/argus*
@@ -19,27 +19,54 @@
     'use strict';
     if (document.location.href.match(/.*onyma\/main\/.*/gi)) {
         if (document.location.href.match(/.*ap_logs.htms.*/gi)) {
-
-           // function sortRows() {
-            let yui = document.getElementById('frm').querySelector('table');
-            //alert(yui.rows[1]);
-                //for (let j = 4; j < yui.rows; j++) {alert('11'); yui.innerHTML='';}
-
-
-////Сортировка строк таблицы
-
-
-//let sortedRows = Array.from(yui.rows)
-  //Array.slice(1)
- // Array.sort((rowA, rowB) => parseInt(rowA.cells[7].innerHTML.replace(/[\.\s:]*/gi,''),10) > parseInt(rowB.cells[7].innerHTML.replace(/[\.\s:]*/gi,''),10) ? 1 : -1);
-
-//yui.tBodies[0].append(...sortedRows);
-////Сортировка строк таблицы
+            ////Сортировка строк в Ониме. Денчик Спасибо
+            let neededTable = document.getElementById('frm').querySelector('table');
 
 
 
 
-            //}
+
+
+
+
+
+
+            function sortDateTime(rows) {
+                for (let i = 4; i < rows.length; i++) {
+                    for (let j = i; j < rows.length; j++) {
+                        //начало валидации времени для парсинга
+                        try {
+                            let oneElemDate = rows[i].cells[5].innerText.split(' ')[0].split('.').join('-') + 20;
+                            let oneElemTime = rows[i].cells[5].innerText.split(' ')[1];
+                            let twoElemDate = rows[j].cells[5].innerText.split(' ')[0].split('.').join('-') + 20;
+                            let twoElemTime = rows[j].cells[5].innerText.split(' ')[1];
+                            let convertOneElemFinal = oneElemDate.split('-').reverse().join('-') + ' ' + oneElemTime;
+                            let convertTwoElemFinal = twoElemDate.split('-').reverse().join('-') + ' ' + twoElemTime;
+                            if (Date.parse(convertTwoElemFinal) < Date.parse(convertOneElemFinal)) {
+                                rows[j].parentNode.insertBefore(rows[j], rows[i]);
+                            }
+                        } catch {
+                            continue;
+                        }
+                    }
+                }
+            }
+            sortDateTime(neededTable.rows);
+             neededTable = document.getElementById('frm').querySelector('table');
+            ////Сортировка строк в Ониме.
+ let newEr = document.createElement('a');
+
+                    newEr.innerHTML = '<<>>';
+            newEr.addEventListener("click", function() {
+
+
+                for (let q = 4; q <neededTable.rows.length; q++) {if (neededTable.rows[q].cells[6].innerHTML=='&nbsp;'){ alert(q);} }
+                    }, false);
+
+
+                    neededTable.rows[2].cells[9].after(newEr);
+
+
 
             //Поиск в ониме по хостнейму, аномеру, логину, маку
             //Функция очистки инпутов
@@ -77,7 +104,6 @@
                     fGP[i].cells[cLngth].after(newE);
                 }
                 //RST-CLT-K-Marksa65-PON1-4000,Slot=1,Port=4,ONT-id=11
-
                 let regH = /((23(A(FIP|ZOV)|CHER|GR(IG|KL)|ILSK|LVOV|MIHA|NOVO|S(EV|MOL|TAV)|UBIN)|A(DY*G*|ST)|(AFIP|CHER|GRKL|SEV)23|DAG*|ING*|K(LM*|BR*|R*DA*|C(R|H))|NZR|R(ND|o|OS|ST|H)|S(T(A|V)|SI|V*O)|V[LG]G)[\-_][a-zA-Z\d\-\._]+[\/\d\b\s\-\|a-z:;#_\(\)=|&gt;]*((\/)*\d+\/\d+(\/\d+)*|((atm.*|\/)\d+:\d+\.\d+)|(.*,.*[a-z\-]=\d+))|[a-f\d\.\-:]{10,}:remote-id)/gi
                 let shlak = /.*(005C)+.*/gi
                 let fHname = String(fGP[i].cells[cLngth].innerText).match(regH);
@@ -93,7 +119,9 @@
                 }
 
                 let fShlak = String(fGP[i].cells[2].innerText).match(shlak);
-                if (fShlak != null) {fGP[i].cells[2].innerText="Нечитаемый А-№"} // удаляем Шлак из аномера, обычно в волгограде более 40 символов аномер
+                if (fShlak != null) {
+                    fGP[i].cells[2].innerText = "Нечитаемый А-№"
+                } // удаляем Шлак из аномера, обычно в волгограде более 40 символов аномер
                 let fAname = String(fGP[i].cells[2].innerText).match(regH);
                 if (fAname != null) {
                     let newE2 = document.createElement('a');
@@ -145,7 +173,7 @@
                     e3[i].cells[2].style.background = 'rgb(255 255 153)';
                 }
                 if (e3[i].innerText.match(/active/gi)) {
-                    if (e3[i].cells[0].innerText.match(/^(04|863\d{0,7}\D|i0|et|rt|rs|dsl[^_]|ssg|ipo|pppoe|dkd)/gi)) {
+                    if (e3[i].cells[0].innerText.match(/^(04|863\d{0,7}\D|i0|et|rt|rs|dsl[^_]|ssg|ipo|pppoe|dkd|fttb)/gi)) {
                         e3[i].cells[0].style.background = 'rgb(193 245 192)';
                         e3[i].cells[1].style.background = 'rgb(193 245 192)';
                         e3[i].cells[2].style.background = 'rgb(193 245 192)';
@@ -190,33 +218,32 @@
     if (document.location.href.match(/.*argus.south.rt.ru\/.*/gi)) {
         var zReg = ""; //Поиск региона
 
+        ////Выпадающее меню с сылками
+        var aIs = [];
+        aIs[0] = '<option value="http://bz.south.rt.ru/stv/light4/">Полезное</option>';
+        aIs[1] = '<option value="https://mrf-pl.south.rt.ru/">Initi</option>';
+        aIs[2] = '<option value="http://ctpdiag.south.rt.ru/">2LTP</option>';
+        aIs[3] = '<option value="http://tr069.south.rt.ru/#/search">TR-69</option>';
+        aIs[4] = '<option value="https://onymaweb.south.rt.ru/onyma/main/dogsearch.htms?menuitem=1851&_cc=1&__rpp=0&pg=0">Onyma</option>';
+        aIs[5] = '<option value="https://uniapp.south.rt.ru/">UniApp</option>';
+        aIs[6] = '<option value="http://10.144.35.30:8081/smarttube/master/adminui4/app/login">ТВ-платформа</option>';
+        aIs[7] = '<option value="http://10.63.1.2:4000/rawlog">Rawlog</option>';
+        aIs[8] = '<option value="https://onymaweb.south.rt.ru/onyma/main/ap_mon.htms?menuitem=1921&real_mi=1921&_cc=1&__rpp=0">Сброс сессий</option>';
+        let mmu = document.getElementById('mmf-main_menu_bar');
+        let fdu = mmu.querySelector('ul');
+        newElem = document.createElement('select');
+        newElem.setAttribute("class", 'minimenu');
+        for (let i = 0; i < aIs.length; i++) {
+            newElem.innerHTML += aIs[i]
+        }
+        fdu.append(newElem);
 
-
-////Выпадающее меню с сылками
-var aIs = [];
-aIs[0] = '<option value="http://bz.south.rt.ru/stv/light4/">Полезное</option>';
-aIs[1] = '<option value="https://mrf-pl.south.rt.ru/">Initi</option>';
-aIs[2] = '<option value="http://ctpdiag.south.rt.ru/">2LTP</option>';
-aIs[3] = '<option value="http://tr069.south.rt.ru/#/search">TR-69</option>';
-aIs[4] = '<option value="https://onymaweb.south.rt.ru/onyma/main/dogsearch.htms?menuitem=1851&_cc=1&__rpp=0&pg=0">Onyma</option>';
-aIs[5] = '<option value="https://uniapp.south.rt.ru/">UniApp</option>';
-aIs[6] = '<option value="http://10.144.35.30:8081/smarttube/master/adminui4/app/login">ТВ-платформа</option>';
-aIs[7] = '<option value="http://10.63.1.2:4000/rawlog">Rawlog</option>';
-aIs[8] = '<option value="https://onymaweb.south.rt.ru/onyma/main/ap_mon.htms?menuitem=1921&real_mi=1921&_cc=1&__rpp=0">Сброс сессий</option>';
-let mmu = document.getElementById('mmf-main_menu_bar');
-let fdu = mmu.querySelector('ul');
-newElem = document.createElement('select');
-newElem.setAttribute("class",'minimenu');
-for (let i = 0; i < aIs.length; i++) {newElem.innerHTML+=aIs[i]}
-fdu.append(newElem);
-
-$(document).ready(function(){
-	$('.minimenu').change(function(){
-		window.open($(this).val(), '_blank')
-	});
-});
-////Выпадающее меню с сылками
-
+        $(document).ready(function() {
+            $('.minimenu').change(function() {
+                window.open($(this).val(), '_blank')
+            });
+        });
+        ////Выпадающее меню с сылками
     }
     if (document.location.href.match(/.*taskListView.xhtml.*/gi)) { /// Поиск кабельного ТВ
         let rre2 = document.getElementById('tbl_frm').querySelectorAll('table')[1].rows;
@@ -229,11 +256,10 @@ $(document).ready(function(){
         }
     }
 
+
     if (document.location.href.match(/.*incidentView.xhtml.*/gi)) {
-
-
-var target = document.getElementById('signal_process_dialog');
-     let allForms = document.getElementById('history_tabs-history_form-add_comment');
+        var target = document.getElementById('signal_process_dialog');
+        let allForms = document.getElementById('history_tabs-history_form-add_comment');
         allForms.setAttribute("onclick", "window.location.reload()");
         let allForms2 = document.querySelectorAll("li[class='ui-state-default ui-corner-top'], li[class='ui-state-default ui-tabs-selected ui-state-active ui-corner-top']");
         let scrolD = document.querySelector(".ui-datatable-scrollable-body");
@@ -257,7 +283,7 @@ var target = document.getElementById('signal_process_dialog');
         let fNLS = /4(34|61|23|09|15)\d{9}\s*/g; //находим хостнейм во вторичке
         let fDopRab = /(ДОПРАБ|ВЫЕЗД|СПД|ПРМОН|CRM)\-\d{7,}/gi;
         let fErrorS = /,\s+\d+\s+CRC,|CRC.*:.*\d+,|(OLT)*RX.*dBm.*(\-*\d+\.\d+)|snr.*\|\s[\d\.]+/gi;
-        let fBras =/[a-z]+\-bras\d+/gi;
+        let fBras = /[a-z]+\-bras\d+/gi;
         let fUp = /\Wup\b/gi;
         let fDown = /\Wdown\b/gi;
         let fTags = /<.*>|\n|Редактировать/gi;
@@ -276,13 +302,11 @@ var target = document.getElementById('signal_process_dialog');
                     matches[i].style.background = "#FFFF99";
                 }
             }
-
-
-            nCell.innerHTML = nCell.innerHTML.replace(/,[a-z\-]*=/gi,"/"); // убираем  ,Slot= ,Port= ,ONT-id=
+            nCell.innerHTML = nCell.innerHTML.replace(/,[a-z\-]*=/gi, "/"); // убираем  ,Slot= ,Port= ,ONT-id=
             nCell.innerHTML = nCell.innerHTML.replace(/[\/\-]ethernet/gi, " Ethernet"); // нужно ждя того, что бы нt искалхостнеймы "бла-блабла-хостнейм-ethernet"
-          //nCell.innerHTML = nCell.innerHTML.replace(fIp, "<b class='f_ip' style='color:#1100FF;	font-size:12pt' >$&</b>");
+            //nCell.innerHTML = nCell.innerHTML.replace(fIp, "<b class='f_ip' style='color:#1100FF;	font-size:12pt' >$&</b>");
             nCell.innerHTML = nCell.innerHTML.replace(fNLS, "<a href='https://onymaweb.south.rt.ru/onyma/main/dogsearch.htms?menuitem=1851&_cc=1&__rpp=0&pg=0&addattrv1=$&', target='_blank'>$&</a>");
-          //nCell.innerHTML = nCell.innerHTML.replace(fData, "<b style='color:#1100FF;	font-size:12pt' >$&</b>");
+            //nCell.innerHTML = nCell.innerHTML.replace(fData, "<b style='color:#1100FF;	font-size:12pt' >$&</b>");
             nCell.innerHTML = nCell.innerHTML.replace(fDopRab, "<b style='color:#CC0000;	font-size:12pt' >$&</b>");
             nCell.innerHTML = nCell.innerHTML.replace(fBras, "<b style='color:#CC0000;	font-size:12pt' >$&</b>");
             nCell.innerHTML = dopRepl(nCell.innerHTML, 1);
@@ -324,11 +348,11 @@ var target = document.getElementById('signal_process_dialog');
                     case 2: //Тут ищем и обрабатываем логины абонента
                         if (str.match(/^".*"$|Default(	)+[a-z\d_]+/gi)) {
                             var nLogin = str.replace(/"/g, "");
-                             nLogin = nLogin.replace(/Default(	)+/g, "");
+                            nLogin = nLogin.replace(/Default(	)+/g, "");
                             var ssString = '';
                             var autString = '';
                             switch (zReg) {
-                                 case 'krd':
+                                case 'krd':
                                     zReg = [86763, 1000000682, 1000000841];
                                     break;
                                 case 'adg':
@@ -338,7 +362,7 @@ var target = document.getElementById('signal_process_dialog');
                                     zReg = [1000000921, 1000000941, 1000000781, 1000000801];
                                     break;
                                 case 'klm':
-                                    zReg = [1000001341,1000001342];
+                                    zReg = [1000001341, 1000001342];
                                     break;
                                 case 'rst':
                                     zReg = [2989, 97723, 1000000601, 1000000661];
@@ -353,10 +377,10 @@ var target = document.getElementById('signal_process_dialog');
                                     zReg = [74663, 1000001421, 1000001401];
                                     break;
                                 case 'kbr':
-                                    zReg = [1000001361,1000001381];
+                                    zReg = [1000001361, 1000001381];
                                     break;
                                 case 'svo':
-                                    zReg = [1000000981,1000001121, 85443, 85423, 1000000781, 1000000801];
+                                    zReg = [1000000981, 1000001121, 85443, 85423, 1000000781, 1000000801];
                                     break;
                                 case 'stv':
                                     zReg = [1000000781, 1000000801];
@@ -367,22 +391,23 @@ var target = document.getElementById('signal_process_dialog');
                             }
                             if (typeof zReg != 'string') {
                                 for (let ir = 0; ir < zReg.length; ir++) {
-                                    autString+="window.open('https://onymaweb.south.rt.ru/onyma/main/ap_show.htms?link=" + zReg[ir] + "&login=" + nLogin + "','_blank');";
-                                    ssString +="window.open('https://onymaweb.south.rt.ru/onyma/main/ap_logs.htms?pg=0&__rpp=0&menuitem=245&spg=210&link=" + zReg[ir] + "&login=" + nLogin + "','_blank');";
+                                    autString += "window.open('https://onymaweb.south.rt.ru/onyma/main/ap_show.htms?link=" + zReg[ir] + "&login=" + nLogin + "','_blank');";
+                                    ssString += "window.open('https://onymaweb.south.rt.ru/onyma/main/ap_logs.htms?pg=0&__rpp=0&menuitem=245&spg=210&link=" + zReg[ir] + "&login=" + nLogin + "','_blank');";
                                 }
                                 ssString = "<a href='#' onclick=" + ssString + ">" + nLogin + "</a>&nbsp;";
-                                autString = "<a href='#' onclick=" + autString+ ">AT</a>&nbsp;";
+                                autString = "<a href='#' onclick=" + autString + ">AT</a>&nbsp;";
                             } else {
                                 ssString = nLogin + "&nbsp;";
                             }
-                            newStr = ssString + autString+ "<a class='f_login'  target='_blank' href='http://tr069.south.rt.ru/#/cpes/by/CPESearchOptions.cid/value/" + nLogin + "?tab=MainDiag'>TR</a>&nbsp;"
+                            newStr = ssString + autString + "<a class='f_login'  target='_blank' href='http://tr069.south.rt.ru/#/cpes/by/CPESearchOptions.cid/value/" + nLogin + "?tab=MainDiag'>TR</a>&nbsp;"
                         };
                         break;
                     case 3: //ДОДЕЛАТЬ ДЛЯ ПОН /0/0/0/0 // 101091510 НЕ СВЕТИТ хостнеймы
-
                         if (str.match(/[a-z\d\.\-_]+[^\b^\s^\/^:^#]/gi)) {
-                            if (str.match(/atm 0/gi)){str = str.replace(/[^\d]0\//gi,'');}// ТЕСТОВЫЙ КУСОК!!!!! Для Адсл
-                            var nHost = str.match(/[a-z\d\.\-_]+[^\b^\s^\/^:^#^\)^\(^\|&]/gi)[0];//находим четкий хостнейм
+                            if (str.match(/\s*atm\s*0/gi)) {
+                                str = str.replace(/[^\d]0\//gi, '');
+                            } // ТЕСТОВЫЙ КУСОК!!!!! Для Адсл
+                            var nHost = str.match(/[a-z\d\.\-_]+[^\b^\s^\/^:^#^\)^\(^\|&]/gi)[0]; //находим четкий хостнейм
                             str = str.replace(nHost, "");
                             var nReg = nHost.match(/[a-z\d]{3}/gi)[0];
                             zReg = nReg.toLowerCase();
@@ -398,14 +423,10 @@ var target = document.getElementById('signal_process_dialog');
                                 }
                             }
                             nPorts = "/" + nPorts[0] + "/" + nPorts[1] + "/" + nPorts[2];
-                            if (nHost!=null && zReg!=null && nPorts!=null ){
-                            newStr = "<a class='f_host' href='http://ctpdiag.south.rt.ru/?a=" + nHost + nPorts + "&region=" + nReg + "' target='_blank' title='" + nPorts0 + "'>" + nHost + nPorts + "</a>";
+                            if (nHost != null && zReg != null && nPorts != null) {
+                                newStr = "<a class='f_host' href='http://ctpdiag.south.rt.ru/?a=" + nHost + nPorts + "&region=" + nReg + "' target='_blank' title='" + nPorts0 + "'>" + nHost + nPorts + "</a>";
                             }
-                        }
-                    //    else {
-                    //        var nPorts2 = str.match(/(\/)*(\d+\/){1,2}\d+$/gi)[0];
-                    //        newStr = "<b style='color:#003300;	font-size:12pt;'>" + nPorts2 + "</b>";
-                     //   }
+                        } //  else {var nPorts2 = str.match(/(\/)*(\d+\/){1,2}\d+$/gi)[0]; newStr = "<b style='color:#003300;	font-size:12pt;'>" + nPorts2 + "</b>";}
                         break;
                 }
                 return newStr;
@@ -425,6 +446,5 @@ var target = document.getElementById('signal_process_dialog');
             }
             return s.replace(text, convert);
         }
-
     }
 })();
