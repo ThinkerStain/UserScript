@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Light4
 // @namespace    http://tampermonkey.net/
-// @version      0.0943
+// @version      0.0944
 // @description  Упрощаем работу глазам
 // @author       Yuriy.Klimovich@south.rt.ru
 // @include        *argus.south.rt.ru/argus*
@@ -18,7 +18,30 @@
 
     'use strict';
     if (document.location.href.match(/.*onyma\/main\/.*/gi)) {
-        if (document.location.href.match(/.*ap_logs.htms.*/gi)) { //Поиск в ониме по хостнейму, аномеру, логину, маку
+        if (document.location.href.match(/.*ap_logs.htms.*/gi)) {
+
+           // function sortRows() {
+            let yui = document.getElementById('frm').querySelector('table');
+            //alert(yui.rows[1]);
+                //for (let j = 4; j < yui.rows; j++) {alert('11'); yui.innerHTML='';}
+
+
+////Сортировка строк таблицы
+
+
+//let sortedRows = Array.from(yui.rows)
+  //Array.slice(1)
+ // Array.sort((rowA, rowB) => parseInt(rowA.cells[7].innerHTML.replace(/[\.\s:]*/gi,''),10) > parseInt(rowB.cells[7].innerHTML.replace(/[\.\s:]*/gi,''),10) ? 1 : -1);
+
+//yui.tBodies[0].append(...sortedRows);
+////Сортировка строк таблицы
+
+
+
+
+            //}
+
+            //Поиск в ониме по хостнейму, аномеру, логину, маку
             //Функция очистки инпутов
             function clrInput() {
                 let yui = document.getElementById('frm').querySelectorAll('input[class="small"][type="text"]');
@@ -253,6 +276,9 @@ var target = document.getElementById('signal_process_dialog');
                     matches[i].style.background = "#FFFF99";
                 }
             }
+
+
+            nCell.innerHTML = nCell.innerHTML.replace(/,[a-z\-]*=/gi,"/"); // убираем  ,Slot= ,Port= ,ONT-id=
             nCell.innerHTML = nCell.innerHTML.replace(/[\/\-]ethernet/gi, " Ethernet"); // нужно ждя того, что бы нt искалхостнеймы "бла-блабла-хостнейм-ethernet"
           //nCell.innerHTML = nCell.innerHTML.replace(fIp, "<b class='f_ip' style='color:#1100FF;	font-size:12pt' >$&</b>");
             nCell.innerHTML = nCell.innerHTML.replace(fNLS, "<a href='https://onymaweb.south.rt.ru/onyma/main/dogsearch.htms?menuitem=1851&_cc=1&__rpp=0&pg=0&addattrv1=$&', target='_blank'>$&</a>");
@@ -355,6 +381,7 @@ var target = document.getElementById('signal_process_dialog');
                     case 3: //ДОДЕЛАТЬ ДЛЯ ПОН /0/0/0/0 // 101091510 НЕ СВЕТИТ хостнеймы
 
                         if (str.match(/[a-z\d\.\-_]+[^\b^\s^\/^:^#]/gi)) {
+                            if (str.match(/atm 0/gi)){str = str.replace(/[^\d]0\//gi,'');}// ТЕСТОВЫЙ КУСОК!!!!! Для Адсл
                             var nHost = str.match(/[a-z\d\.\-_]+[^\b^\s^\/^:^#^\)^\(^\|&]/gi)[0];//находим четкий хостнейм
                             str = str.replace(nHost, "");
                             var nReg = nHost.match(/[a-z\d]{3}/gi)[0];
