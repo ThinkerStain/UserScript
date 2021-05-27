@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Light4
 // @namespace    http://tampermonkey.net/
-// @version      0.09441
+// @version      0.0945
 // @description  Упрощаем работу глазам
 // @author       Yuriy.Klimovich@south.rt.ru
 // @include        *argus.south.rt.ru/argus*
@@ -16,6 +16,9 @@
     // @require     https://github.com/ThinkerStain/UserScript/raw/main/Light4.js
     // @updateURL   https://github.com/ThinkerStain/UserScript/raw/main/Light4.js
 
+
+    /// ПРОВЕРИТЬ ОТОБРАЖЕНИЕ В CRM-102369027
+    ///CRM-102370784
     'use strict';
     if (document.location.href.match(/.*onyma\/main\/.*/gi)) {
         if (document.location.href.match(/.*ap_logs.htms.*/gi)) {
@@ -23,17 +26,11 @@
             let neededTable = document.getElementById('frm').querySelector('table');
 
 
-
-
-
-
-
-
-
-
             function sortDateTime(rows) {
                 for (let i = 4; i < rows.length; i++) {
+
                     for (let j = i; j < rows.length; j++) {
+
                         //начало валидации времени для парсинга
                         try {
                             let oneElemDate = rows[i].cells[5].innerText.split(' ')[0].split('.').join('-') + 20;
@@ -52,21 +49,18 @@
                 }
             }
             sortDateTime(neededTable.rows);
-             neededTable = document.getElementById('frm').querySelector('table');
+
+            neededTable = document.getElementById('frm').querySelector('table');
             ////Сортировка строк в Ониме.
- let newEr = document.createElement('a');
-
-                    newEr.innerHTML = '<<>>';
-            newEr.addEventListener("click", function() {
 
 
-                for (let q = 4; q <neededTable.rows.length; q++) {if (neededTable.rows[q].cells[6].innerHTML=='&nbsp;'){ alert(q);} }
-                    }, false);
-
-
-                    neededTable.rows[2].cells[9].after(newEr);
-
-
+            //проверяем наличие авторизаций
+            var estAut = 0;
+            for (var i = 4; i < neededTable.rows.length; i++) {
+                if (neededTable.rows[4].cells[6].innerHTML == "&nbsp;") {
+                    estAut = 1;
+                }
+            }
 
             //Поиск в ониме по хостнейму, аномеру, логину, маку
             //Функция очистки инпутов
@@ -78,63 +72,96 @@
                 }
             }
             let fGP = document.getElementById('frm').querySelector('table').rows;
-            for (let i = 4; i < fGP.length; i++) {
+            for (let i = 1; i < fGP.length; i++) {
                 let cLngth = fGP[i].cells.length - 1;
-                let fLog = String(fGP[i].cells[3].innerText).replace(/"/gi, '');
-                if (fLog != null) {
-                    let newE2 = document.createElement('a');
-                    newE2.addEventListener("click", function() {
-                        clrInput();
-                        document.getElementById('login').value = fLog;
-                        document.getElementById('filt').click();
-                    }, false);
-                    newE2.innerHTML = 'L';
-                    fGP[i].cells[cLngth].after(newE2);
-                }
-                let fGPmac = fGP[i].cells[cLngth].innerText.match(/(MAC:)*([a-fA-F\d]{2}[\.\-\:_]{1}){5}[a-fA-F\d]{2}|(MAC:)*([a-fA-F\d]{4}[\.\-:_]{1}){2}[a-fA-F\d]{4}/gi);
-                if (fGPmac != null) {
-                    fGPmac = String(fGPmac).replace(/mac:*/gi, "");
-                    let newE = document.createElement('a');
-                    newE.addEventListener("click", function() {
-                        clrInput();
-                        document.getElementById('sess_rem').value = '%' + fGPmac + '%';
-                        document.getElementById('filt').click();
-                    }, false);
-                    newE.innerHTML = 'M';
-                    fGP[i].cells[cLngth].after(newE);
-                }
-                //RST-CLT-K-Marksa65-PON1-4000,Slot=1,Port=4,ONT-id=11
-                let regH = /((23(A(FIP|ZOV)|CHER|GR(IG|KL)|ILSK|LVOV|MIHA|NOVO|S(EV|MOL|TAV)|UBIN)|A(DY*G*|ST)|(AFIP|CHER|GRKL|SEV)23|DAG*|ING*|K(LM*|BR*|R*DA*|C(R|H))|NZR|R(ND|o|OS|ST|H)|S(T(A|V)|SI|V*O)|V[LG]G)[\-_][a-zA-Z\d\-\._]+[\/\d\b\s\-\|a-z:;#_\(\)=|&gt;]*((\/)*\d+\/\d+(\/\d+)*|((atm.*|\/)\d+:\d+\.\d+)|(.*,.*[a-z\-]=\d+))|[a-f\d\.\-:]{10,}:remote-id)/gi
-                let shlak = /.*(005C)+.*/gi
-                let fHname = String(fGP[i].cells[cLngth].innerText).match(regH);
-                if (fHname != null) {
-                    let newE2 = document.createElement('a');
-                    newE2.addEventListener("click", function() {
-                        clrInput();
-                        document.getElementById('sess_rem').value = '%' + fHname + '%';
-                        document.getElementById('filt').click();
-                    }, false);
-                    newE2.innerHTML = 'H';
-                    fGP[i].cells[cLngth].after(newE2);
-                }
+                let newZ = document.createElement('td');
+                newZ.id = 'ttd' + i;
+                fGP[i].cells[cLngth].after(newZ);
+                let addHref = document.getElementById('ttd' + i);
 
-                let fShlak = String(fGP[i].cells[2].innerText).match(shlak);
-                if (fShlak != null) {
-                    fGP[i].cells[2].innerText = "Нечитаемый А-№"
-                } // удаляем Шлак из аномера, обычно в волгограде более 40 символов аномер
-                let fAname = String(fGP[i].cells[2].innerText).match(regH);
-                if (fAname != null) {
-                    let newE2 = document.createElement('a');
-                    newE2.addEventListener("click", function() {
-                        clrInput();
-                        document.getElementById('sessid').value = '%' + fAname + '%';
-                        document.getElementById('filt').click();
+                ///Вставляем копир
+                if (i == 2) {
+                    let newEr = document.createElement('a');
+                    newEr.innerHTML = 'COPY';
+                    newEr.addEventListener("click", function() {
+                        let copyText = '';
+                        for (let q = 4; q < neededTable.rows.length; q++) {
+                            if (neededTable.rows[q].cells[6].innerHTML == '&nbsp;') {
+                                copyText += neededTable.rows[q].innerText + '\n';
+                                navigator.clipboard.writeText(copyText);
+                            }
+                            if (q == neededTable.rows.length - 2) {
+                                if (copyText != '') {
+                                    alert('Данные авторизации скопированы');
+                                } else {
+                                    alert('Нет активной сессии');
+                                }
+                            }
+                        }
                     }, false);
-                    newE2.innerHTML = 'A';
-                    fGP[i].cells[cLngth].after(newE2);
+                    addHref.append(newEr);
+                }
+                ///Вставляем копир
+                // Вставляем ссылки поиска ALMH
+                if (i > 3) {
+                    let fLog = String(fGP[i].cells[3].innerText).replace(/"/gi, '');
+                    if (fLog != null) {
+                        let newK = document.createElement('a');
+                        newK.addEventListener("click", function() {
+                            clrInput();
+                            document.getElementById('login').value = fLog;
+                            document.getElementById('filt').click();
+                        }, false);
+                        newK.innerHTML = 'L';
+                        addHref.append(newK);
+                    }
+                    let fGPmac = fGP[i].cells[cLngth].innerText.match(/(MAC:)*([a-fA-F\d]{2}[\.\-\:_]{1}){5}[a-fA-F\d]{2}|(MAC:)*([a-fA-F\d]{4}[\.\-:_]{1}){2}[a-fA-F\d]{4}/gi);
+                    if (fGPmac != null) {
+                        fGPmac = String(fGPmac).replace(/mac:*/gi, "");
+                        let newK = document.createElement('a');
+                        newK.addEventListener("click", function() {
+                            clrInput();
+                            document.getElementById('sess_rem').value = '%' + fGPmac + '%';
+                            document.getElementById('filt').click();
+                        }, false);
+                        newK.innerHTML = 'M';
+                        addHref.append(newK);
+                    }
+                    //RST-CLT-K-Marksa65-PON1-4000,Slot=1,Port=4,ONT-id=11
+                    let regH = /((23(A(FIP|ZOV)|CHER|GR(IG|KL)|ILSK|LVOV|MIHA|NOVO|S(EV|MOL|TAV)|UBIN)|A(DY*G*|ST)|(AFIP|CHER|GRKL|SEV)23|DAG*|ING*|K(LM*|BR*|R*DA*|C(R|H))|NZR|R(ND|o|OS|ST|H)|S(T(A|V)|SI|V*O)|V[LG]G)[\-_][a-zA-Z\d\-\._]+[\/\d\b\s\-\|a-z:;#_\(\)=|&gt;]*((\/)*\d+\/\d+(\/\d+)*|((atm.*|\/)\d+:\d+\.\d+)|(.*,.*[a-z\-]=\d+))|[a-f\d\.\-:]{10,}:remote-id)/gi
+                    let shlak = /.*(005C)+.*/gi
+                    let fHname = String(fGP[i].cells[cLngth].innerText).match(regH);
+                    if (fHname != null) {
+                        let newK = document.createElement('a');
+                        newK.addEventListener("click", function() {
+                            clrInput();
+                            document.getElementById('sess_rem').value = '%' + fHname + '%';
+                            document.getElementById('filt').click();
+                        }, false);
+                        newK.innerHTML = 'H';
+                        addHref.append(newK);
+                    }
+
+                    let fShlak = String(fGP[i].cells[2].innerText).match(shlak);
+                    if (fShlak != null) {
+                        fGP[i].cells[2].innerText = "Нечитаемый А-№"
+                    } // удаляем Шлак из аномера, обычно в волгограде более 40 символов аномер
+                    let fAname = String(fGP[i].cells[2].innerText).match(regH);
+                    if (fAname != null) {
+                        let newK = document.createElement('a');
+                        newK.addEventListener("click", function() {
+                            clrInput();
+                            document.getElementById('sessid').value = '%' + fAname + '%';
+                            document.getElementById('filt').click();
+                        }, false);
+                        newK.innerHTML = 'A';
+                        addHref.append(newK);
+                    }
+
                 }
             }
         }
+
         if (document.location.href.match(/.*dog.htms.*/gi)) { // Функции в ониме
             var e0 = document.querySelector('#aval\\[202\\]'); // Ссылка на универсальный клиент около "Уникальный номер клиента в АСР"
             if (e0 != null) {
@@ -438,7 +465,7 @@
                     text = /(mac:)*([a-fA-F\d]{2}[\.\-\:_]{1}){5}[a-fA-F\d]{2}|(mac:)*([a-fA-F\d]{4}[\.\-:_]{1}){2}[a-fA-F\d]{4}/gi;
                     break;
                 case 2:
-                    text = /\"[a-zA-Z\d_]{8,}\"|Default(	)+[a-z\d_]+/gi;
+                    text = /"[a-zA-Z\d_]{8,}"|Default(	)+[a-z\d_]+/gi;
                     break;
                 case 3: ///(^|[^a-z]) &gt; ===   >
                     text = /(^|[^a-z]|[^>])(23(A(FIP|ZOV)|CHER|GR(IG|KL)|ILSK|LVOV|MIHA|NOVO|S(EV|MOL|TAV)|UBIN)|A(DY*G*|ST)|(AFIP|CHER|GRKL|SEV)23|DAG*|ING*|K(LM*|BR*|R*DA*|C(R|H))|NZR|R(ND|o|OS|ST|H)|S(T(A|V)|SI|V*O)|V[LG]G)[\-_][a-zA-Z\d\-\._]+[\/\d\b\s\-\|a-z:;#_=|&gt;]*(\/)*\d+\/\d+(\/\d+)*/gi; // \(\)
