@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Light4
 // @namespace    http://tampermonkey.net/
-// @version      0.09451
+// @version      0.09452
 // @description  Упрощаем работу глазам
 // @author       Yuriy.Klimovich@south.rt.ru
 // @include        *argus.south.rt.ru/argus*
@@ -24,9 +24,7 @@
     ///CRM-102474862
     /// ВЛГ авторизация странная логин - dslpp965876
     'use strict';
-    var allBrass = [];
-    var allHostsSPP = [];
-    var allRegions = [];
+
 
     if (document.location.href.match(/.*onyma\/main\/.*/gi)) {
         if (document.location.href.match(/.*ap_logs.htms.*/gi)) {
@@ -246,6 +244,18 @@
     }
 
     if (document.location.href.match(/.*argus.south.rt.ru\/.*/gi)) { //Работает везде в аргусе
+        var allBrass = [];
+        var allHostsSPP = [];
+
+        var allRegions = [];
+        var allHost = [];
+        var allPorts = [];
+        var allLogins = [];
+
+		var crm_Rgn = ''; //Точный регион
+        var crm_Host = '';
+        var crm_Ports = '';
+        var crm_Login = '';
 
         let fTV = ['^f8:a0:97', '^00:1a:79', '^ec:4c:4d', '^0c:56:5c', '^1c:bb:a8', '^00:02:9b', '^f4:0e:83', '^00:07:67', '^d8:af:81', '^e4:27', '^bc:64', '^5c:b0', '^7c:6d', '^14:2e', '^60:ce'];
         let fTime = /((&nbsp;)|\s)([0-1]*\d|2[0-3]):[0-5]\d((&nbsp;)|(\s|\b))*/g;
@@ -263,7 +273,7 @@
 
 
 
-        var zReg = ""; //Поиск региона
+
 
         ////Выпадающее меню с сылками
         var aIs = [];
@@ -385,96 +395,93 @@
 
             //if (allBrass.length>0){alert(allBrass);}
             //if (allHostsSPP.length>0){alert(allHostsSPP);}
+            //if (allLogins.length>0){alert(allLogins);}
 
             function dopRepl(x, f) {
                 function convert(str, offset) {
-                    let hrefIS = [];
-                    hrefIS[0] = 'http://10.63.1.2:4000/rawlog/%D0%AE%D0%B3?mac='; //rawlog
-                    hrefIS[1] = 'http://10.144.35.30:8081/smarttube/master/adminui4/app/ServiceAccount/list?info_listMac='; //smartube
-                    hrefIS[2] = 'http://ctpdiag.south.rt.ru/macvendors.php/?'; //маквендор
-                    hrefIS[3] = 'https://onymaweb.south.rt.ru/onyma/main/ap_show.htms?link='; //логи онимы
-                    hrefIS[4] = 'https://onymaweb.south.rt.ru/onyma/main/ap_logs.htms?pg=0&__rpp=0&menuitem=245&spg=210&link='; //сброс сессий онимы
-                    hrefIS[5] = 'http://tr069.south.rt.ru/#/cpes/by/CPESearchOptions.cid/value/'; //tr-69
-                    hrefIS[6] = 'http://ctpdiag.south.rt.ru/?a='; //2ltp
+                    let hrf_IS = [];
+                    hrf_IS[0] = 'http://10.63.1.2:4000/rawlog/%D0%AE%D0%B3?mac='; //rawlog
+                    hrf_IS[1] = 'http://10.144.35.30:8081/smarttube/master/adminui4/app/ServiceAccount/list?info_listMac='; //smartube
+                    hrf_IS[2] = 'http://ctpdiag.south.rt.ru/macvendors.php/?'; //маквендор
+                    hrf_IS[3] = 'https://onymaweb.south.rt.ru/onyma/main/ap_show.htms?link='; //логи онимы
+                    hrf_IS[4] = 'https://onymaweb.south.rt.ru/onyma/main/ap_logs.htms?pg=0&__rpp=0&menuitem=245&spg=210&link='; //сброс сессий онимы
+                    hrf_IS[5] = 'http://tr069.south.rt.ru/#/cpes/by/CPESearchOptions.cid/value/'; //tr-69
+                    hrf_IS[6] = 'http://ctpdiag.south.rt.ru/?a='; //2ltp
                     let newStr = "";
                     switch (f) {
                         case 1: //Тут ищем и обрабатываем маки
-                            var sM = "";
-                            var Raw = "";
-                            var SmartT = "";
-                            var bezM = str.replace(/^mac[\.\-:]*/gi, "");
-                            if (str.match(/^mac[\.\-:]*/gi)) {
-                                sM = str.match(/^mac[\.\-:]*/gi);
-                            }
-                            var bezM2 = bezM.replace(/[\-\.:]*/g, "");
-                            bezM2 = (bezM2.replace(/(?=([A-Fa-f0-9]{2})+($))/g, ':')).substring(1); //делаем все через 2:2:2
+                            var hrf_R = '';
+                            var hrf_S = '';
+                            var dpMac = str.match(/^mac[\.\-:]*/gi);
+                            if (dpMac==null){dpMac='';}
+                            str = str.replace(/^mac|[\.\-:]*/gi, "");
+                            str = (str.replace(/(?=([A-Fa-f0-9]{2})+($))/g, ':')).substring(1); //делаем все через XX:XX:XX:XX:XX:XX
                             for (let z = 0; z < fTV.length; z++) { //ищем ТВ приставки
                                 let ReNew = new RegExp(fTV[z], "gi");
-                                if (bezM2.match(ReNew)) {
-                                    Raw = "\"window.open('" + hrefIS[0] + bezM2 + "', '_blank')\"";
-                                    Raw = "<a href='#' onclick=" + Raw + ">R</a>";
-                                    SmartT = "\"window.open('" + hrefIS[1] + "%25" + bezM2 + "%25', '_blank')\""
-                                    SmartT = "<a href='#' onclick=" + SmartT + ">S</a>";
+                                if (str.match(ReNew)) {
+                                    hrf_R = "<a href='#' onclick=\"window.open('" + hrf_IS[0] + str + "', '_blank')\">R</a>";
+                                    hrf_S = "<a href='#' onclick=\"window.open('" + hrf_IS[1] + "%25" + str + "%25', '_blank')\">S</a>";
                                 }
                             }
-                            var opnWin = "\"window.open('" + hrefIS[2] + bezM + "', 'blank', 'location=no,width=230,height=100,scrollbars=no,top=850,left=0,resizable = no,status  = no')\"";
-                            newStr = sM + "<a href='#' onclick=" + opnWin + ">" + bezM + "</a> " + Raw + " " + SmartT;
+                            var opnWin = "\"window.open('" + hrf_IS[2] + str + "', 'blank', 'location=no,width=230,height=100,scrollbars=no,top=850,left=0,resizable = no,status  = no')\"";
+                            newStr = dpMac + "<a href='#' onclick=" + opnWin + ">" + str + "</a> " + hrf_R + " " + hrf_S;
                             break;
                         case 2: //Тут ищем и обрабатываем логины абонента
-                            if (str.match(/^".*"$|Default(	)+[a-z\d_]+/gi)) {
-                                var nLogin = str.replace(/"/g, "");
-                                nLogin = nLogin.replace(/Default(	)+/g, "");
-                                var ssString = '';
-                                var autString = '';
-                                switch (zReg) {
+                            if (str.match(/^".*"$|(Default|BRAS\d*)(	)+[a-z\d_]+/gi)) {
+                                var nLgn = str.replace(/"/g, "");
+                                nLgn = nLgn.replace(/(Default|BRAS\d*)(	)+/g, "");
+                                allLogins.push(nLgn);
+                                var hrf_Ony = '';
+                                var hrf_Aut = '';
+                                switch (crm_Rgn) {
                                     case 'krd':
-                                        zReg = [86763, 1000000682, 1000000841];
+                                        crm_Rgn = [86763, 1000000682, 1000000841];
                                         break;
                                     case 'adg':
-                                        zReg = [86763, 1000000682, 1000000841];
+                                        crm_Rgn = [86763, 1000000682, 1000000841];
                                         break;
                                     case 'ast':
-                                        zReg = [1000000921, 1000000941, 1000000781, 1000000801];
+                                        crm_Rgn = [1000000921, 1000000941, 1000000781, 1000000801];
                                         break;
                                     case 'klm':
-                                        zReg = [1000001341, 1000001342];
+                                        crm_Rgn = [1000001341, 1000001342];
                                         break;
                                     case 'rst':
-                                        zReg = [2989, 97723, 1000000601, 1000000661];
+                                        crm_Rgn = [2989, 97723, 1000000601, 1000000661];
                                         break;
                                     case 'vlg':
-                                        zReg = [85363, 1000000902, 1000000901];
+                                        crm_Rgn = [85363, 1000000902, 1000000901];
                                         break;
                                     case 'kcr':
-                                        zReg = [1000000781, 1000000801];
+                                        crm_Rgn = [1000000781, 1000000801];
                                         break;
                                     case 'dag':
-                                        zReg = [74663, 1000001421, 1000001401];
+                                        crm_Rgn = [74663, 1000001421, 1000001401];
                                         break;
                                     case 'kbr':
-                                        zReg = [1000001361, 1000001381];
+                                        crm_Rgn = [1000001361, 1000001381];
                                         break;
                                     case 'svo':
-                                        zReg = [1000000981, 1000001121, 85443, 85423, 1000000781, 1000000801];
+                                        crm_Rgn = [1000000981, 1000001121, 85443, 85423, 1000000781, 1000000801];
                                         break;
                                     case 'stv':
-                                        zReg = [1000000781, 1000000801];
+                                        crm_Rgn = [1000000781, 1000000801];
                                         break;
                                     case 'ing':
-                                        zReg = [1000000781, 1000000801];
+                                        crm_Rgn = [1000000781, 1000000801];
                                         break;
                                 }
-                                if (typeof zReg != 'string') {
-                                    for (let ir = 0; ir < zReg.length; ir++) {
-                                        autString += "window.open('" + hrefIS[3] + zReg[ir] + "&login=" + nLogin + "','_blank');";
-                                        ssString += "window.open('" + hrefIS[3] + zReg[ir] + "&login=" + nLogin + "','_blank');";
+                                if (typeof crm_Rgn != 'string') {
+                                    for (let ir = 0; ir < crm_Rgn.length; ir++) {
+                                        hrf_Aut += "window.open('" + hrf_IS[3] + crm_Rgn[ir] + "&login=" + nLgn + "','_blank');";
+                                        hrf_Ony += "window.open('" + hrf_IS[4] + crm_Rgn[ir] + "&login=" + nLgn + "','_blank');";
                                     }
-                                    ssString = "<a href='#' onclick=" + ssString + ">" + nLogin + "</a>&nbsp;";
-                                    autString = "<a href='#' onclick=" + autString + ">AT</a>&nbsp;";
+                                    hrf_Ony = "<a href='#' onclick=" + hrf_Ony + ">" + nLgn + "</a>&nbsp;";
+                                    hrf_Aut = "<a href='#' onclick=" + hrf_Aut + ">AT</a>&nbsp;";
                                 } else {
-                                    ssString = nLogin + "&nbsp;";
+                                    hrf_Ony = nLgn + "&nbsp;";
                                 }
-                                newStr = ssString + autString + "<a class='f_login' target='_blank' href='" + hrefIS[5] + nLogin + "'>TR</a>&nbsp;"
+                                newStr = hrf_Ony + hrf_Aut + "<a class='f_login' target='_blank' href='" + hrf_IS[5] + nLgn + "'>TR</a>&nbsp;"
                             };
                             break;
                         case 3: //ДОДЕЛАТЬ ДЛЯ ПОН /0/0/0/0 // 101091510 НЕ СВЕТИТ хостнеймы
@@ -486,23 +493,23 @@
                                 var nHost = str.match(/[a-z\d\.\-_]+[^\b^\s^\/^:^#^\)^\(^\|&]/gi)[0]; //находим четкий хостнейм
                                 str = str.replace(nHost, "");
                                 var nReg = nHost.match(/[a-z\d]{3}/gi)[0];
-                                zReg = nReg.toLowerCase();
-                                var nPorts0 = str.match(/(\d+\/){1,2}\d+$/gi)[0];
-                                var nPorts = nPorts0.split("/");
-                                while (nPorts.length < 3) {
-                                    nPorts.unshift("0");
+                                crm_Rgn = nReg.toLowerCase();
+                                var nPrts0 = str.match(/(\d+\/){1,2}\d+$/gi)[0];
+                                var nPrts = nPrts0.split("/");
+                                while (nPrts.length < 3) {
+                                    nPrts.unshift("0");
                                 }
-                                for (let iz = 0; iz < nPorts.length; iz++) {
-                                    nPorts[iz] = nPorts[iz] * 1;
-                                    if (nPorts[iz] > 128) {
-                                        nPorts[iz] = 0;
+                                for (let iz = 0; iz < nPrts.length; iz++) {
+                                    nPrts[iz] = nPrts[iz] * 1;
+                                    if (nPrts[iz] > 128) {
+                                        nPrts[iz] = 0;
                                     }
                                 }
-                                nPorts = "/" + nPorts[0] + "/" + nPorts[1] + "/" + nPorts[2];
-                                if (nHost != null && zReg != null && nPorts != null) {
-                                    newStr = "<a class='f_host' href='" + hrefIS[6] + nHost + nPorts + "&region=" + nReg + "' target='_blank' title='" + nPorts0 + "'>" + nHost + nPorts + "</a>";
+                                nPrts = "/" + nPrts[0] + "/" + nPrts[1] + "/" + nPrts[2];
+                                if (nHost != null && crm_Rgn != null && nPrts != null) {
+                                    newStr = "<a class='f_host' href='" + hrf_IS[6] + nHost + nPrts + "&region=" + nReg + "' target='_blank' title='" + nPrts0 + "'>" + nHost + nPrts + "</a>";
                                 }
-                            } //  else {var nPorts2 = str.match(/(\/)*(\d+\/){1,2}\d+$/gi)[0]; newStr = "<b style='color:#003300;	font-size:12pt;'>" + nPorts2 + "</b>";}
+                            } //  else {var nPrts2 = str.match(/(\/)*(\d+\/){1,2}\d+$/gi)[0]; newStr = "<b style='color:#003300;	font-size:12pt;'>" + nPrts2 + "</b>";}
                             break;
                     }
                     return newStr;
@@ -514,7 +521,7 @@
                         text = /(mac:)*([a-fA-F\d]{2}[\.\-\:_]{1}){5}[a-fA-F\d]{2}|(mac:)*([a-fA-F\d]{4}[\.\-:_]{1}){2}[a-fA-F\d]{4}/gi;
                         break;
                     case 2:
-                        text = /"[a-zA-Z\d\._]{8,}"|Default(	)+[a-z\d\._]+/gi;
+                        text = /"[a-zA-Z\d\._]{8,}"|(Default|BRAS\d*)(	)+[a-z\d\._]+/gi;
                         break;
                     case 3: ///(^|[^a-z]) &gt; ===   >
                         text = /(^|[^a-z]|[^>])(23(A(FIP|ZOV)|CHER|GR(IG|KL)|ILSK|LVOV|MIHA|NOVO|S(EV|MOL|TAV)|UBIN)|A(DY*G*|ST)|(AFIP|CHER|GRKL|SEV)23|DAG*|ING*|K(LM*|BR*|R*DA*|C(R|H))|NZR|R(ND|o|OS|ST|H)|S(T(A|V)|SI|V*O)|V[LG]G)[\-_][a-zA-Z\d\-\._]+[\/\d\b\s\-\|a-z:;#_=|&gt;]*(\/)*\d+\/\d+(\/\d+)*/gi; // \(\)
