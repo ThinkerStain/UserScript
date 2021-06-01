@@ -444,7 +444,7 @@
             //nCell.innerHTML = nCell.innerHTML.replace(fIp, "<b class='f_ip' style='color:#1100FF;	font-size:12pt' >$&</b>");
             nCell.innerHTML = nCell.innerHTML.replace(fNLS, "<a href='https://onymaweb.south.rt.ru/onyma/main/dogsearch.htms?menuitem=1851&_cc=1&__rpp=0&pg=0&addattrv1=$&', target='_blank'>$&</a>");
             //nCell.innerHTML = nCell.innerHTML.replace(fData, "<b style='color:#1100FF;	font-size:12pt' >$&</b>");
-            //nCell.innerHTML = nCell.innerHTML.replace(fDopRab, "<b style='color:#CC0000;	font-size:12pt' >$&</b>");
+            nCell.innerHTML = nCell.innerHTML.replace(fDopRab, "<b style='color:#CC0000;	font-size:12pt' >$&</b>");
             if (nCell.innerHTML.match(fBras)) { //находим список брасов
                 nCell.innerHTML = nCell.innerHTML.replace(fBras, "<b style='color:#CC0000;	font-size:12pt' >$&</b>");
                 // allBrass.push(nCell.innerHTML.match(fBras));
@@ -452,8 +452,8 @@
             nCell.innerHTML = dopRepl(nCell.innerHTML, 1);
             nCell.innerHTML = dopRepl(nCell.innerHTML, 3);
             nCell.innerHTML = dopRepl(nCell.innerHTML, 2);
-            //nCell.innerHTML = nCell.innerHTML.replace(fTime, "<b style='color:#CC0000;	font-size:12pt' >$&</b>");
-            //nCell.innerHTML = nCell.innerHTML.replace(fErrorS, "<b class='f_error' style='color:#CC0000; font-size:12pt' >$&</b>");
+            nCell.innerHTML = nCell.innerHTML.replace(fTime, "<b style='color:#CC0000;	font-size:12pt' >$&</b>");
+            nCell.innerHTML = nCell.innerHTML.replace(fErrorS, "<b class='f_error' style='color:#CC0000; font-size:12pt' >$&</b>");
             nCell.innerHTML = nCell.innerHTML.replace(fUp, "<b style='color:#009900; font-size:12pt' >$&</b>");
             nCell.innerHTML = nCell.innerHTML.replace(fDown, "<b style='color:#CC0000; font-size:12pt' >$&</b>");
             //Делаем аргус информативным
