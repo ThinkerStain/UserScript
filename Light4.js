@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Light4
 // @namespace    http://tampermonkey.net/
-// @version      0.09453
+// @version      0.09454
 // @description  Упрощаем работу глазам
 // @author       Yuriy.Klimovich@south.rt.ru
 // @include        *argus.south.rt.ru/argus*
@@ -260,6 +260,7 @@
     var crm_Host = '';
     var crm_Ports = '';
     var crm_Login = '';
+    var crm_Journal = [];
 
     let fTV = ['^f8:a0:97', '^00:1a:79', '^ec:4c:4d', '^0c:56:5c', '^1c:bb:a8', '^00:02:9b', '^f4:0e:83', '^00:07:67', '^d8:af:81', '^e4:27', '^bc:64', '^5c:b0', '^7c:6d', '^14:2e', '^60:ce'];
     let fTime = /((&nbsp;)|\s)([0-1]*\d|2[0-3]):[0-5]\d((&nbsp;)|(\s|\b))*/g;
@@ -350,7 +351,7 @@
     }
     //// Навигатор по комментариям, вверх и вниз
     //// Функция поиска  региона и журналов
-    function f_findRegion(str) {
+    function f_findRegion(str,x) {
         str = String(str);
         let allRegExp = [
             ['krd', /(^(23)(a(fip|zov)|gr(ig|kl)|s(ev|mol|tav)|cher|ilsk|lvov|miha|novo|ubin))|(^a(dy*g*)|^k(da|rd)|^rh|(^afip|^cher|^grkl|^sev)(23))/gi, [86763, 1000000682, 1000000841]],
@@ -368,7 +369,7 @@
 
         for (let i = 0; i < allRegExp.length; i++) {
             if (str.match(allRegExp[i][1])) {
-                str = String(allRegExp[i][0]);
+                str = String(allRegExp[i][x]);
                 //alert(typeof str+"___"+str);
                 break;
             }
@@ -411,27 +412,8 @@
             } //Находим все Брасы
             ///alert(allBrass+"    111");
             ///////////////////////////////////
-
-            //Делаем аргус информативным
-            nCell.innerHTML = nCell.innerHTML.replace(/,[a-z\-]*=/gi, "/"); // убираем  ,Slot= ,Port= ,ONT-id=
-            nCell.innerHTML = nCell.innerHTML.replace(/[\/\-]ethernet/gi, " Ethernet"); // нужно ждя того, что бы нt искалхостнеймы "бла-блабла-хостнейм-ethernet"
-            //nCell.innerHTML = nCell.innerHTML.replace(fIp, "<b class='f_ip' style='color:#1100FF;	font-size:12pt' >$&</b>");
-            nCell.innerHTML = nCell.innerHTML.replace(fNLS, "<a href='https://onymaweb.south.rt.ru/onyma/main/dogsearch.htms?menuitem=1851&_cc=1&__rpp=0&pg=0&addattrv1=$&', target='_blank'>$&</a>");
-            //nCell.innerHTML = nCell.innerHTML.replace(fData, "<b style='color:#1100FF;	font-size:12pt' >$&</b>");
-            nCell.innerHTML = nCell.innerHTML.replace(fDopRab, "<b style='color:#CC0000;	font-size:12pt' >$&</b>");
-            if (nCell.innerHTML.match(fBras)) { //находим список брасов
-                nCell.innerHTML = nCell.innerHTML.replace(fBras, "<b style='color:#CC0000;	font-size:12pt' >$&</b>");
-                // allBrass.push(nCell.innerHTML.match(fBras));
-            }
-            nCell.innerHTML = dopRepl(nCell.innerHTML, 1);
-            nCell.innerHTML = dopRepl(nCell.innerHTML, 3);
-            nCell.innerHTML = dopRepl(nCell.innerHTML, 2);
-            nCell.innerHTML = nCell.innerHTML.replace(fTime, "<b style='color:#CC0000;	font-size:12pt' >$&</b>");
-            nCell.innerHTML = nCell.innerHTML.replace(fErrorS, "<b class='f_error' style='color:#CC0000; font-size:12pt' >$&</b>");
-            nCell.innerHTML = nCell.innerHTML.replace(fUp, "<b style='color:#009900; font-size:12pt' >$&</b>");
-            nCell.innerHTML = nCell.innerHTML.replace(fDown, "<b style='color:#CC0000; font-size:12pt' >$&</b>");
-            //Делаем аргус информативным
         }
+
         ///alert(allBrass+"222");
 
         allRegions = allHostsSPP.concat(allBrass); //собираем все строки где может быть указан регион
@@ -442,16 +424,44 @@
         allRegions.sort(); //сортируем и убираем повторы
         //задаем начальное значени для сравнения
         if (allRegions.length > 0) {
-            crm_Rgn = [f_findRegion(allRegions[0])];
+            crm_Rgn = [f_findRegion(allRegions[0],0)];
         }
         for (let i = 0; i < allRegions.length; i++) {
-            if (f_findRegion(allRegions[i]) != crm_Rgn[crm_Rgn.length - 1]) {
-                crm_Rgn.push(f_findRegion(allRegions[i])); //сверяем со 2 массивом
+            if (f_findRegion(allRegions[i],0) != crm_Rgn[crm_Rgn.length - 1]) {
+                crm_Rgn.push(f_findRegion(allRegions[i],0)); //сверяем со 2 массивом
             }
         }
        crm_Rgn= String(crm_Rgn).toUpperCase(); // поиск в 2лтп корректно срабатывает с верхним регистром
+        crm_Journal= f_findRegion(crm_Rgn,2).split(','); //находим массив журналов
+
+
+
+          for (let i = 0; i < srchHere.length; i++) {
+            let nCell = srchHere[i].cells[3].firstChild;
+            //Делаем аргус информативным
+            nCell.innerHTML = nCell.innerHTML.replace(/,[a-z\-]*=/gi, "/"); // убираем  ,Slot= ,Port= ,ONT-id=
+            nCell.innerHTML = nCell.innerHTML.replace(/[\/\-]ethernet/gi, " Ethernet"); // нужно ждя того, что бы нt искалхостнеймы "бла-блабла-хостнейм-ethernet"
+            //nCell.innerHTML = nCell.innerHTML.replace(fIp, "<b class='f_ip' style='color:#1100FF;	font-size:12pt' >$&</b>");
+            nCell.innerHTML = nCell.innerHTML.replace(fNLS, "<a href='https://onymaweb.south.rt.ru/onyma/main/dogsearch.htms?menuitem=1851&_cc=1&__rpp=0&pg=0&addattrv1=$&', target='_blank'>$&</a>");
+            //nCell.innerHTML = nCell.innerHTML.replace(fData, "<b style='color:#1100FF;	font-size:12pt' >$&</b>");
+            //nCell.innerHTML = nCell.innerHTML.replace(fDopRab, "<b style='color:#CC0000;	font-size:12pt' >$&</b>");
+            if (nCell.innerHTML.match(fBras)) { //находим список брасов
+                nCell.innerHTML = nCell.innerHTML.replace(fBras, "<b style='color:#CC0000;	font-size:12pt' >$&</b>");
+                // allBrass.push(nCell.innerHTML.match(fBras));
+            }
+            nCell.innerHTML = dopRepl(nCell.innerHTML, 1);
+            nCell.innerHTML = dopRepl(nCell.innerHTML, 3);
+            nCell.innerHTML = dopRepl(nCell.innerHTML, 2);
+            //nCell.innerHTML = nCell.innerHTML.replace(fTime, "<b style='color:#CC0000;	font-size:12pt' >$&</b>");
+            //nCell.innerHTML = nCell.innerHTML.replace(fErrorS, "<b class='f_error' style='color:#CC0000; font-size:12pt' >$&</b>");
+            nCell.innerHTML = nCell.innerHTML.replace(fUp, "<b style='color:#009900; font-size:12pt' >$&</b>");
+            nCell.innerHTML = nCell.innerHTML.replace(fDown, "<b style='color:#CC0000; font-size:12pt' >$&</b>");
+            //Делаем аргус информативным
+        }
+
+
         //ВАЖНАЯ ПРОВЕРКА находит точный регион
-  //      alert(crm_Rgn);
+      ////  alert(crm_Rgn+" __ "+crm_Journal);
     }
     //// Функция замены строк на активные ссылки и выделение
     //// Замена подстроки в строке (ищем корректное совпадение и в нем изменем только нужную часть)
@@ -490,51 +500,13 @@
                     if (str.match(/^".*"$|(Default|BRAS\d*)(	)+[a-z\d_]+/gi)) {
                         var nLgn = str.replace(/"/g, "");
                         nLgn = nLgn.replace(/(Default|BRAS\d*)(	)+/g, "");
-                        allLogins.push(nLgn);
+                        //allLogins.push(nLgn);
                         var hrf_Ony = '';
                         var hrf_Aut = '';
-                        switch (crm_Rgn) {
-                            case 'KRD':
-                                crm_Rgn = [86763, 1000000682, 1000000841];
-                                break;
-                            case 'ADG':
-                                crm_Rgn = [86763, 1000000682, 1000000841];
-                                break;
-                            case 'AST':
-                                crm_Rgn = [1000000921, 1000000941, 1000000781, 1000000801];
-                                break;
-                            case 'KLM':
-                                crm_Rgn = [1000001341, 1000001342];
-                                break;
-                            case 'RST':
-                                crm_Rgn = [2989, 97723, 1000000601, 1000000661];
-                                break;
-                            case 'VLG':
-                                crm_Rgn = [85363, 1000000902, 1000000901];
-                                break;
-                            case 'KCR':
-                                crm_Rgn = [1000000781, 1000000801];
-                                break;
-                            case 'DAG':
-                                crm_Rgn = [74663, 1000001421, 1000001401];
-                                break;
-                            case 'KBR':
-                                crm_Rgn = [1000001361, 1000001381];
-                                break;
-                            case 'SVO':
-                                crm_Rgn = [1000000981, 1000001121, 85443, 85423, 1000000781, 1000000801];
-                                break;
-                            case 'STV':
-                                crm_Rgn = [1000000781, 1000000801];
-                                break;
-                            case 'ING':
-                                crm_Rgn = [1000000781, 1000000801];
-                                break;
-                        }
-                        if (typeof crm_Rgn != 'string') {
-                            for (let ir = 0; ir < crm_Rgn.length; ir++) {
-                                hrf_Aut += "window.open('" + hrf_IS[3] + crm_Rgn[ir] + "&login=" + nLgn + "','_blank');";
-                                hrf_Ony += "window.open('" + hrf_IS[4] + crm_Rgn[ir] + "&login=" + nLgn + "','_blank');";
+                        if (typeof crm_Journal != 'string') {
+                            for (let ir = 0; ir < crm_Journal.length; ir++) {
+                                hrf_Aut += "window.open('" + hrf_IS[3] + crm_Journal[ir] + "&login=" + nLgn + "','_blank');";
+                                hrf_Ony += "window.open('" + hrf_IS[4] + crm_Journal[ir] + "&login=" + nLgn + "','_blank');";
                             }
                             hrf_Ony = "<a href='#' onclick=" + hrf_Ony + ">" + nLgn + "</a>&nbsp;";
                             hrf_Aut = "<a href='#' onclick=" + hrf_Aut + ">AT</a>&nbsp;";
