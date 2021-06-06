@@ -249,6 +249,7 @@
     //// Глобальные переменные аргуса
     var allBrass = [];
     var allHostsSPP = [];
+    var allClearHostsSPP = [];
 
     var allRegions = [];
     var allHosts = [];
@@ -271,6 +272,8 @@
     let fTags = /<.*>|\n|Редактировать/gi;
 
     let reg_SHst = /(23(A(FIP|ZOV)|CHER|GR(IG|KL)|ILSK|LVOV|MIHA|NOVO|S(EV|MOL|TAV)|UBIN)|A(DY*G*|ST)|(AFIP|CHER|GRKL|SEV)23|DAG*|ING*|K(LM*|BR*|R*DA*|C(R|H))|NZR|R(ND|o|OS|ST|H)|S(T(A|V)|SI|V*O)|V[LG]G)[\-_][a-zA-Z\d\-\._]+[\/\d\b\s\-\|a-z:;#_=|&gt;]*(\/)*\d+\/\d+(\/\d+)*/g; // \(\)
+    let reg_CHst = /(23(A(FIP|ZOV)|CHER|GR(IG|KL)|ILSK|LVOV|MIHA|NOVO|S(EV|MOL|TAV)|UBIN)|A(DY*G*|ST)|(AFIP|CHER|GRKL|SEV)23|DAG*|ING*|K(LM*|BR*|R*DA*|C(R|H))|NZR|R(ND|o|OS|ST|H)|S(T(A|V)|SI|V*O)|V[LG]G)[\-_][a-zA-Z\d\-\._]+/g;
+    let reg_Cspp = /(\/)*\d+\/\d+(\/\d+)*/g;
     let reg_SLgn = /"[a-zA-Z\d\._]{8,}"|(Default|BRAS\d*)(	)+[a-z\d\._]+/gi; //Ищем Логин по "окружению"
     let reg_CLgn = /("|((Default|BRAS\d*)(	)+))/gi; //Что нужно почистить
     let reg_SBras = /[a-z]+\-bras\d+/gi;
@@ -371,7 +374,7 @@
 
         for (let i = 0; i < allRegExp.length; i++) {
             if (str.match(allRegExp[i][1])) {
-                str = allRegExp[i][x];              
+                str = allRegExp[i][x];
                 break;
             }
         }
@@ -381,6 +384,7 @@
     //// Поиск уникальных значений
     function f_findUnique(arr){
         let newArr =[];
+       // alert("RESULT "+typeof arr+"    "+ arr+"    "+arr.length);
         for (let z = 0; z < arr.length; z++) {arr[z]=String(arr[z])} //делаем строковый массив
         arr.sort();
         if (arr.length > 0) {
@@ -402,24 +406,38 @@
             ///////////////////////////////////
             ///Собираем массив из строк где есть регионы, это хостней и брасы
 
-            var nfHost = nCell.innerText.match(reg_SHst);
-            if (nfHost != null) {allHostsSPP = allHostsSPP.concat(nfHost);} //Находим все хостнеймы
-
             var nreg_SBras = nCell.innerText.match(reg_SBras);
             if (nreg_SBras != null) {allBrass = allBrass.concat(nreg_SBras);} //Находим все Брасы
 
+            var nfHost = nCell.innerText.match(reg_SHst);
+            if (nfHost != null) {
+                allHostsSPP = allHostsSPP.concat(nfHost);
+                //let reg_CHst
+                //let reg_Cspp
+
+                //var allClearHostsSPP = [];
+                //var allHosts = [];
+                //var allPorts = [];
+            } //Находим все хостнеймы
+
+
+
             var nfLgn = nCell.innerText.match(reg_SLgn);
             if (nfLgn != null) {
-               nfLgn=String(nfLgn).replace(reg_CLgn,'');//Находим чистим логины
-                allLogins.push(nfLgn);
-                               } 
+               nfLgn=String(nfLgn).replace(reg_CLgn,'').split(',');//Переделываем в строку, удаляем ненужное, разделяем по "," - получаем массив
+              //  alert("FIND "+typeof nfLgn+"    "+ nfLgn+"    "+nfLgn.length);
+                allLogins = allLogins.concat(nfLgn);
+
+                               }
         }
         //ищем уникальные значения
         allHostsSPP=f_findUnique(allHostsSPP);
         allBrass=f_findUnique(allBrass);
+
         allLogins=f_findUnique(allLogins);
+          alert("RESULT "+typeof allLogins+"    "+ allLogins+"    "+allLogins.length);
         //ищем уникальные значения
-    //  alert(allLogins);
+
     //  alert(allBrass);
 
         allRegions = allHostsSPP.concat(allBrass); //собираем все строки где может быть указан регион
