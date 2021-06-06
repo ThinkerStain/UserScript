@@ -26,11 +26,12 @@
     /// ВЛГ авторизация странная логин - dslpp965876
     'use strict';
 
-//////////// ONYMA ////////////
+    //////////// ONYMA ////////////
     if (document.location.href.match(/.*onyma\/main\/.*/gi)) {
         if (document.location.href.match(/.*ap_logs.htms.*/gi)) {
             ////Сортировка строк в Ониме. Денчик Спасибо
             let neededTable = document.getElementById('frm').querySelector('table');
+
             function sortDateTime(rows) {
                 for (let i = 4; i < rows.length; i++) {
                     for (let j = i; j < rows.length; j++) {
@@ -251,6 +252,8 @@
     var allHostsSPP = [];
     var allClearHostsSPP = [];
 
+    var allSplitHosts = [];
+
     var allRegions = [];
     var allHosts = [];
     var allPorts = [];
@@ -273,13 +276,14 @@
 
     let reg_SHst = /(23(A(FIP|ZOV)|CHER|GR(IG|KL)|ILSK|LVOV|MIHA|NOVO|S(EV|MOL|TAV)|UBIN)|A(DY*G*|ST)|(AFIP|CHER|GRKL|SEV)23|DAG*|ING*|K(LM*|BR*|R*DA*|C(R|H))|NZR|R(ND|o|OS|ST|H)|S(T(A|V)|SI|V*O)|V[LG]G)[\-_][a-zA-Z\d\-\._]+[\/\d\b\s\-\|a-z:;#_=|&gt;]*(\/)*\d+\/\d+(\/\d+)*/g; // \(\)
     let reg_CHst = /(23(A(FIP|ZOV)|CHER|GR(IG|KL)|ILSK|LVOV|MIHA|NOVO|S(EV|MOL|TAV)|UBIN)|A(DY*G*|ST)|(AFIP|CHER|GRKL|SEV)23|DAG*|ING*|K(LM*|BR*|R*DA*|C(R|H))|NZR|R(ND|o|OS|ST|H)|S(T(A|V)|SI|V*O)|V[LG]G)[\-_][a-zA-Z\d\-\._]+/g;
+
     let reg_Cspp = /(\/)*\d+\/\d+(\/\d+)*/g;
     let reg_SLgn = /"[a-zA-Z\d\._]{8,}"|(Default|BRAS\d*)(	)+[a-z\d\._]+/gi; //Ищем Логин по "окружению"
     let reg_CLgn = /("|((Default|BRAS\d*)(	)+))/gi; //Что нужно почистить
     let reg_SBras = /[a-z]+\-bras\d+/gi;
-	let reg_SNls = /4(34|61|23|09|15)\d{9}\s*/g;
-	let reg_SSrm = /(ДОПРАБ|ВЫЕЗД|СПД|ПРМОН|CRM)\-\d{7,}/gi;
-	let reg_SError = /,\s+\d+\s+CRC,|CRC.*:.*\d+,|(OLT)*RX.*dBm.*(\-*\d+\.\d+)|snr.*\|\s[\d\.]+/gi;
+    let reg_SNls = /4(34|61|23|09|15)\d{9}\s*/g;
+    let reg_SSrm = /(ДОПРАБ|ВЫЕЗД|СПД|ПРМОН|CRM)\-\d{7,}/gi;
+    let reg_SError = /,\s+\d+\s+CRC,|CRC.*:.*\d+,|(OLT)*RX.*dBm.*(\-*\d+\.\d+)|snr.*\|\s[\d\.]+/gi;
     //// Глобальные переменные аргуса
     //////////// Все функции для аргуса ////////////
     //// Выпадающее меню с сылками
@@ -287,7 +291,7 @@
         var aIs = [];
         aIs[0] = '<option value="http://bz.south.rt.ru/stv/light4/">Полезное</option>';
         aIs[1] = '<option value="https://mrf-pl.south.rt.ru/">Initi</option>';
-        aIs[2] = '<option value="http://ctpdiag.south.rt.ru/?a=' + crm_Host + crm_Ports + '&region=' + crm_Rgn+'">2LTP</option>'; //http://ctpdiag.south.rt.ru/?a=&region= +  crm_Rgn
+        aIs[2] = '<option value="http://ctpdiag.south.rt.ru/?a=' + crm_Host + crm_Ports + '&region=' + crm_Rgn + '">2LTP</option>'; //http://ctpdiag.south.rt.ru/?a=&region= +  crm_Rgn
         aIs[3] = '<option value="http://tr069.south.rt.ru/#/search">TR-69</option>';
         aIs[4] = '<option value="https://onymaweb.south.rt.ru/onyma/main/dogsearch.htms?menuitem=1851&_cc=1&__rpp=0&pg=0">Onyma</option>';
         aIs[5] = '<option value="https://uniapp.south.rt.ru/">UniApp</option>';
@@ -356,7 +360,7 @@
     }
     //// Навигатор по комментариям, вверх и вниз
     //// Функция поиска  региона и журналов
-    function f_findRegion(str,x) {
+    function f_findRegion(str, x) {
         str = String(str);
         let allRegExp = [
             ['KRD', /(^(23)(a(fip|zov)|gr(ig|kl)|s(ev|mol|tav)|cher|ilsk|lvov|miha|novo|ubin))|(^a(dy*g*)|^k(da|rd)|^rh|(^afip|^cher|^grkl|^sev)(23))/gi, [86763, 1000000682, 1000000841]],
@@ -382,20 +386,21 @@
     }
     //// Функция поиска  региона и журналов
     //// Поиск уникальных значений
-    function f_findUnique(arr){
-        let newArr =[];
-       // alert("RESULT "+typeof arr+"    "+ arr+"    "+arr.length);
-        for (let z = 0; z < arr.length; z++) {arr[z]=String(arr[z])} //делаем строковый массив
+    function f_findUnique(arr) {
+        let newArr = [];
+        for (let z = 0; z < arr.length; z++) {
+            arr[z] = String(arr[z])
+        } //делаем строковый массив
         arr.sort();
         if (arr.length > 0) {
             newArr.push(arr[0]);
             for (let z = 0; z < arr.length; z++) {
-                if (arr[z] != newArr[newArr.length-1]) {
+                if (arr[z] != newArr[newArr.length - 1]) {
                     newArr.push(arr[z]); //сверяем со 2 массивом
+                }
             }
         }
-    }
-         return newArr;
+        return newArr;
     }
     //// Поиск уникальных значений
     //// Функция замены строк на активные ссылки и выделение
@@ -404,57 +409,69 @@
         for (let i = 0; i < srchHere.length; i++) {
             let nCell = srchHere[i].cells[3].firstChild;
             ///////////////////////////////////
-            ///Собираем массив из строк где есть регионы, это хостней и брасы
-
+            /// Поиск Брасов
             var nreg_SBras = nCell.innerText.match(reg_SBras);
-            if (nreg_SBras != null) {allBrass = allBrass.concat(nreg_SBras);} //Находим все Брасы
-
+            if (nreg_SBras != null) {
+                allBrass = allBrass.concat(nreg_SBras);
+            } //Находим все Брасы
+            /// Поиск Брасов
+            /// Поиск и разделение хостнейма по частям
             var nfHost = nCell.innerText.match(reg_SHst);
             if (nfHost != null) {
-                allHostsSPP = allHostsSPP.concat(nfHost);
-                //let reg_CHst
-                //let reg_Cspp
-
-                //var allClearHostsSPP = [];
-                //var allHosts = [];
-                //var allPorts = [];
-            } //Находим все хостнеймы
-
-
-
+                var sA = [];
+                var sA0 = '';
+                var sA1 = '';
+                var sA2 = '';
+                for (let j = 0; j < nfHost.length; j++) {
+                    sA0 = nfHost[j];
+                    //убираем мусор
+                    nfHost[j] = nfHost[j].replace(/,[a-z\-]*=/gi, "/");
+                    nfHost[j] = nfHost[j].replace(/[\/\-]ethernet/gi, " Ethernet");
+                    //убираем мусор
+                    sA1 = nfHost[j].match(reg_CHst);
+                    sA2 = nfHost[j].match(reg_Cspp);
+                    sA.push([sA0, sA1, sA2]);
+                }
+                //массив массивов (поиск строки хоста неочищенная, чистый хостнейм, порты)
+                allSplitHosts = allSplitHosts.concat(sA);
+                allHostsSPP = allHostsSPP.concat(nfHost); //неочищенные хостнеймы
+            }
+            /// Поиск и разделение хостнейма по частям
+            /// Поиск Логинов
             var nfLgn = nCell.innerText.match(reg_SLgn);
             if (nfLgn != null) {
-               nfLgn=String(nfLgn).replace(reg_CLgn,'').split(',');//Переделываем в строку, удаляем ненужное, разделяем по "," - получаем массив
-              //  alert("FIND "+typeof nfLgn+"    "+ nfLgn+"    "+nfLgn.length);
+                nfLgn = String(nfLgn).replace(reg_CLgn, '').split(','); //Переделываем в строку, удаляем ненужное, разделяем по "," - получаем массив
                 allLogins = allLogins.concat(nfLgn);
-
-                               }
+            }
+            /// Поиск Логинов
         }
-        //ищем уникальные значения
-        allHostsSPP=f_findUnique(allHostsSPP);
-        allBrass=f_findUnique(allBrass);
+        /// ищем уникальные значения
 
-        allLogins=f_findUnique(allLogins);
-          alert("RESULT "+typeof allLogins+"    "+ allLogins+"    "+allLogins.length);
-        //ищем уникальные значения
+        //alert(allSplitHosts);
+        allSplitHosts = String(f_findUnique(allSplitHosts)).split(',');//получаем массив грязный хостнейм, хостнейм, порты
+        //alert("Ress--!!! \n"+typeof allSplitHosts[2]+"\n"+allSplitHosts[2]);
 
-    //  alert(allBrass);
-
+        allHostsSPP = f_findUnique(allHostsSPP);
+        allBrass = f_findUnique(allBrass);
+        allLogins = f_findUnique(allLogins);
+        /// ищем уникальные значения
+        /// ищем регион
         allRegions = allHostsSPP.concat(allBrass); //собираем все строки где может быть указан регион
         for (let i = 0; i < allRegions.length; i++) {
-            if ((typeof crm_Rgn)!='string'){
-                crm_Rgn = f_findRegion(allRegions[i],0); // поиск в 2лтп корректно срабатывает с верхним регистром
-                crm_Journal= f_findRegion(crm_Rgn,2); //находим массив журналов
+            if ((typeof crm_Rgn) != 'string') {
+                crm_Rgn = f_findRegion(allRegions[i], 0); // поиск в 2лтп корректно срабатывает с верхним регистром
+                crm_Journal = f_findRegion(crm_Rgn, 2); //находим массив журналов
                 break;
             }
         }
-////////////////////////////////////
+        /// ищем регион
+        ////////////////////////////////////
 
 
 
-       for (let i = 0; i < srchHere.length; i++) {
+        for (let i = 0; i < srchHere.length; i++) {
             let nCell = srchHere[i].cells[3].firstChild;
-                     //Выделяем выезды красным
+            //Выделяем выезды красным
             if (srchHere[i].cells[0].innerText.match(/выезд/gi)) {
                 srchHere[i].style.background = 'rgb(245 193 192)';
             }
@@ -493,7 +510,7 @@
 
 
         //ВАЖНАЯ ПРОВЕРКА находит точный регион
-      ////  alert(crm_Rgn+" __ "+crm_Journal);
+        ////  alert(crm_Rgn+" __ "+crm_Journal);
     }
     //// Функция замены строк на активные ссылки и выделение
     //// Замена подстроки в строке (ищем корректное совпадение и в нем изменем только нужную часть)
